@@ -1,0 +1,56 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "1deb447b4103e633a773a5217fc2fc8c",
+    "packages": [
+        {
+            "name": "sms77/api",
+            "version": "dev-php5.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sms77io/php-api-wrapper",
+                "reference": "33c95140f0d200193dc706e0ef59df433798f549"
+            },
+            "require": {
+                "ext-ctype": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sms77\\Api\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Sms77\\Api\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sms77",
+                    "email": "info@sms77.io"
+                }
+            ],
+            "description": "A simple PHP library for making CURL requests to sms77.io gateway.",
+            "time": "2019-11-25T13:07:25+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "sms77/api": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.6.0"
+    },
+    "platform-dev": []
+}
