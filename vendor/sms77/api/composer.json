@@ -1,0 +1,25 @@
+{
+  "name": "sms77/api",
+  "description": "A simple PHP library for making CURL requests to sms77.io gateway.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sms77",
+      "email": "info@sms77.io"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Sms77\\Api\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Sms77\\Api\\": "src/"
+    }
+  },
+  "require": {
+    "ext-ctype": "*"
+  }
+}
