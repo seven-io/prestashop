@@ -37,6 +37,7 @@ class BackendHelperForm extends HelperForm
             'config[SMS77_MSG_ON_INVOICE]' => Configuration::get('SMS77_MSG_ON_INVOICE'),
             'config[SMS77_MSG_ON_SHIPMENT]' => Configuration::get('SMS77_MSG_ON_SHIPMENT'),
             'config[SMS77_MSG_ON_PAYMENT]' => Configuration::get('SMS77_MSG_ON_PAYMENT'),
+            'config[SMS77_FROM]' => Configuration::get('SMS77_FROM'),
         ];
 
         $this->fields_form = [
@@ -75,7 +76,13 @@ class BackendHelperForm extends HelperForm
                             'Text on delivery?',
                             'Send a text message after delivery?'
                         ),
-
+                        [
+                            'type' => 'text',
+                            'name' => 'config[SMS77_FROM]',
+                            'label' => $this->l("From"),
+                            'hint' => $this->l('Set a custom sender number or name.'),
+                            'desc' => $this->l('Max 11 alphanumeric or 16 numeric characters.'),
+                        ],
                         $this->makeTextarea(
                             "INVOICE",
                             'Sets the text message sent to the customer after invoice generation.'
