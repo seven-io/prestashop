@@ -56,6 +56,7 @@ class Sms77 extends Module
             'max' => _PS_VERSION_,
         ];
 
+        $this->config["SMS77_FROM"] = Configuration::get('PS_SHOP_NAME');
         $this->config["SMS77_ON_INVOICE"] = "An invoice has been generated for your order.";
         $this->config["SMS77_ON_INVOICE"] .=
             " Log in to your customer account in order to have a look at it. Best regards!";
@@ -95,7 +96,7 @@ class Sms77 extends Module
 
                 if (0 !== Tools::strlen($apiKey)) {
                     $api = new Client($apiKey);
-                    $api->sms($number, Configuration::get($configKey));
+                    $api->sms($number, Configuration::get($configKey), ["from" => Configuration::get('SMS77_FROM')]);
                 }
             }
         };
@@ -107,23 +108,29 @@ class Sms77 extends Module
             return Tools::strlen($address->phone_mobile) ? $address->phone_mobile : $address->phone;
         };
 
-        $orderState = $data["newOrderStatus"];
-        $awaitingPayment = in_array($orderState->id, [1, 10, 13]);
-        $isShipping = 4 === $orderState->id;
-        $awaitingDelivery = 5 === $orderState->id;
-        $isPaid = in_array($orderState->id, [2, 11]);
+        $getAction = function () use ($data) {
+            $orderState = $data["newOrderStatus"];
+            $awaitingPayment = in_array($orderState->id, [1, 10, 13]);
+            $isShipping = 4 === $orderState->id;
+            $awaitingDelivery = 5 === $orderState->id;
+            $isPaid = in_array($orderState->id, [2, 11]);
 
-        $action = null;
+            $action = null;
 
-        if ($awaitingPayment) {
-            $action = "INVOICE";
-        } elseif ($isPaid) {
-            $action = "PAYMENT";
-        } elseif ($isShipping) {
-            $action = "SHIPMENT";
-        } elseif ($awaitingDelivery) {
-            $action = "DELIVERY";
-        }
+            if ($awaitingPayment) {
+                $action = "INVOICE";
+            } elseif ($isPaid) {
+                $action = "PAYMENT";
+            } elseif ($isShipping) {
+                $action = "SHIPMENT";
+            } elseif ($awaitingDelivery) {
+                $action = "DELIVERY";
+            }
+
+            return $action;
+        };
+
+        $action = $getAction();
 
         if (null !== $action) {
             if (1 == Configuration::get("SMS77_MSG_ON_$action")) {
