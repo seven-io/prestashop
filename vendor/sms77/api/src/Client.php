@@ -2,7 +2,13 @@
 
 namespace Sms77\Api;
 
+use Sms77\Api\Validator\ContactsValidator;
+use Sms77\Api\Validator\LookupValidator;
+use Sms77\Api\Validator\PricingValidator;
 use Sms77\Api\Validator\SmsValidator;
+use Sms77\Api\Validator\StatusValidator;
+use Sms77\Api\Validator\ValidateForVoiceValidator;
+use Sms77\Api\Validator\VoiceValidator;
 
 class Client
 {
@@ -18,99 +24,107 @@ class Client
 
     function balance()
     {
-        return $this->request("balance");
+        return $this->request("balance", $this->buildOptions([]));
     }
 
-    /*TODO: add add validation*/
     function contacts($action, array $extra = [])
     {
-        $required = [
+        $options = $this->buildOptions([
             "action" => $action,
-        ];
+        ], $extra);
 
-        $options = array_merge($required, $extra);
+        (new ContactsValidator($options))->validate();
 
         return $this->request("contacts", $options);
     }
 
-    /*TODO: add add validation*/
     function lookup($type, $number, array $extra = [])
     {
-        $required = [
+        $options = $this->buildOptions([
             "type" => $type,
             "number" => $number,
-        ];
+        ], $extra);
 
-        $options = array_merge($required, $extra);
+        (new LookupValidator($options))->validate();
 
         return $this->request("lookup", $options);
     }
 
-    /*TODO: add add validation*/
     function pricing(array $extra = [])
     {
-        $required = [];
+        $options = $this->buildOptions([], $extra);
 
-        $options = array_merge($required, $extra);
+        (new PricingValidator($options))->validate();
 
         return $this->request("pricing", $options);
     }
 
     function sms($to, $text, array $extra = [])
     {
-        $required = [
+        $options = $this->buildOptions([
             "to" => $to,
             "text" => $text
-        ];
+        ], $extra);
 
-        $options = array_merge($required, $extra);
+        (new SmsValidator($options))->validate();
 
-        $validator = new SmsValidator($options);
-        $validator->validate();
         return $this->request("sms", $options);
     }
 
-    /*TODO: add add validation*/
     function status($msgId)
     {
-        $required = [
+        $options = $this->buildOptions([
             "msg_id" => $msgId,
-        ];
+        ]);
 
-        $options = array_merge($required);
+        (new StatusValidator($options))->validate();
 
         return $this->request("status", $options);
     }
 
-    /*TODO: add add validation*/
     function validateForVoice($number, array $extra = [])
     {
-        $required = [
+        $options = $this->buildOptions([
             "number" => $number,
-        ];
+        ], $extra);
 
-        $options = array_merge($required, $extra);
+        (new ValidateForVoiceValidator($options))->validate();
 
         return $this->request("validate_for_voice", $options);
     }
 
-    /*TODO: add add validation*/
     function voice($to, $text, array $extra = [])
     {
-        $required = [
+        $options = $this->buildOptions([
             "to" => $to,
-            "text" => $text,
-        ];
+            "text" => $text
+        ], $extra);
 
-        $options = array_merge($required, $extra);
+        (new VoiceValidator($options))->validate();
 
         return $this->request("voice", $options);
     }
 
+    private function buildOptions(array $required, array $extra = [])
+    {
+        $required = array_merge($required, [
+            "p" => $this->apiKey
+        ]);
+
+        return array_merge($required, $extra);
+    }
+
     private function request($path, $options = [])
     {
-        $options = array_merge($options, ["p" => $this->apiKey]);
+        $curl_get_contents = function ($url) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            $output = curl_exec($ch);
+            curl_close($ch);
+            return $output;
+        };
 
-        return file_get_contents(self::BASE_URI . "/" . $path . "?" . http_build_query($options));
+        return $curl_get_contents(self::BASE_URI . "/" . $path . "?" . http_build_query($options));
     }
 }

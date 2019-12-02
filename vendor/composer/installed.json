@@ -1,17 +1,30 @@
 [
     {
         "name": "sms77/api",
-        "version": "dev-php5.6",
-        "version_normalized": "dev-php5.6",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/sms77io/php-api-wrapper",
-            "reference": "33c95140f0d200193dc706e0ef59df433798f549"
+            "url": "https://github.com/sms77io/php-api-wrapper.git",
+            "reference": "f5d20b70084481bc9d9094a27fc1c5b059d677ed"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sms77io/php-api-wrapper/zipball/f5d20b70084481bc9d9094a27fc1c5b059d677ed",
+            "reference": "f5d20b70084481bc9d9094a27fc1c5b059d677ed",
+            "shasum": ""
         },
         "require": {
-            "ext-ctype": "*"
+            "ext-ctype": "*",
+            "ext-curl": "*"
         },
-        "time": "2019-11-25T13:07:25+00:00",
+        "require-dev": {
+            "ext-json": "*",
+            "ext-simplexml": "*",
+            "ext-soap": "*",
+            "phpunit/phpunit": "^8"
+        },
+        "time": "2019-11-26T14:11:45+00:00",
         "type": "library",
         "installation-source": "source",
         "autoload": {
@@ -19,11 +32,7 @@
                 "Sms77\\Api\\": "src/"
             }
         },
-        "autoload-dev": {
-            "psr-4": {
-                "Sms77\\Api\\": "src/"
-            }
-        },
+        "notification-url": "https://packagist.org/downloads/",
         "license": [
             "MIT"
         ],
