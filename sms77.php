@@ -60,18 +60,14 @@ class Sms77 extends Module
         $this->config["SMS77_ON_INVOICE"] = "An invoice has been generated for your order.";
         $this->config["SMS77_ON_INVOICE"] .=
             " Log in to your customer account in order to have a look at it. Best regards!";
-        $this->config["SMS77_ON_INVOICE"] = trim($this->config["SMS77_ON_INVOICE"]);
 
         $this->config["SMS77_ON_PAYMENT"] = "A payment has been made for your order.";
         $this->config["SMS77_ON_PAYMENT"] .= " Log in to your customer account for more information. Best regards!";
-        $this->config["SMS77_ON_PAYMENT"] = trim($this->config["SMS77_ON_PAYMENT"]);
 
         $this->config["SMS77_ON_SHIPMENT"] = "Your order has been shipped.";
         $this->config["SMS77_ON_SHIPMENT"] .= " Log in to your customer account for more information. Best regards!";
-        $this->config["SMS77_ON_SHIPMENT"] = trim($this->config["SMS77_ON_SHIPMENT"]);
 
         $this->config["SMS77_ON_DELIVERY"] = "Your order has been delivered. Enjoy your goods!";
-        $this->config["SMS77_ON_DELIVERY"] = trim($this->config["SMS77_ON_DELIVERY"]);
     }
 
     public function install()
@@ -90,7 +86,7 @@ class Sms77 extends Module
 
     public function hookActionOrderStatusPostUpdate(array $data)
     {
-        $validateAndSend = function (string $configKey, string $number) {
+        $validateAndSend = function ($configKey, $number) {
             if (Tools::strlen($number)) {
                 $apiKey = Configuration::get("SMS77_API_KEY");
 
@@ -152,15 +148,23 @@ class Sms77 extends Module
     {
         require_once $this->__moduleDir . '/forms/BackendHelperForm.php';
 
+        $output = null;
+
         if (Tools::isSubmit('submit' . $this->name)) {
             foreach (Tools::getValue('config') as $k => $v) {
+                if ("SMS77_API_KEY" == $k && 0 === Tools::strlen($v)) {
+                    $this->errors[] =
+                        Tools::displayError($this->l(
+                            "An API key is required in order to send SMS. Get yours at sms77.io."
+                        ));
+                }
+
                 Configuration::updateValue($k, $v);
             }
         }
 
-        return $this->errors
-            ? $this->displayError(implode($this->errors, '<br>'))
-            : $this->displayConfirmation($this->l('Settings updated'))
-            . (new BackendHelperForm($this->name))->generate();
+        $output .= $this->displayConfirmation($this->l('Settings updated'));
+
+        return $output . (new BackendHelperForm($this->name))->generate();
     }
 }

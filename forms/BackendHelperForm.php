@@ -138,7 +138,7 @@ class BackendHelperForm extends HelperForm
         $this->toolbar_scroll = true;
     }
 
-    private function makeTextarea(string $action, string $trans)
+    private function makeTextarea($action, $trans)
     {
         $trans = $this->l($trans);
 
@@ -151,7 +151,7 @@ class BackendHelperForm extends HelperForm
         ];
     }
 
-    private function makeSwitch(string $action, string $label, string $desc)
+    private function makeSwitch($action, $label, $desc)
     {
         $descHit = $this->l($desc);
 

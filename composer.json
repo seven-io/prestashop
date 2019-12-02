@@ -3,16 +3,10 @@
   "config": {
     "prepend-autoloader": false
   },
-  "description": "Sms77.io API plugin for PrestaShop.",
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/sms77io/php-api-wrapper"
-    }
-  ],
+  "description": "Sms77.io API plugin for PrestaShop applications.",
   "require": {
     "php": ">=5.6.0",
-    "sms77/api": "dev-php5.6"
+    "sms77/api": "dev-master"
   },
   "license": "MIT",
   "type": "prestashop-module"
