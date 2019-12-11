@@ -50,63 +50,63 @@ class BackendHelperForm extends HelperForm
                         [
                             'type' => 'text',
                             'name' => 'config[SMS77_API_KEY]',
-                            'label' => $this->l("API-Key"),
+                            'label' => $this->l('API-Key'),
                             'hint' => $this->l('Your sms77.io API-Key.'),
                             'desc' => $this->l('An API-Key is needed for sending. Get yours now at sms77.io'),
                             'required' => true,
                         ],
 
                         $this->makeSwitch(
-                            "INVOICE",
+                            'INVOICE',
                             'Text on invoice generation?',
                             'Send a text message after an invoice has been created?'
                         ),
                         $this->makeSwitch(
-                            "PAYMENT",
+                            'PAYMENT',
                             'Text on payment?',
                             'Send a text message after payment has been received?'
                         ),
                         $this->makeSwitch(
-                            "SHIPMENT",
+                            'SHIPMENT',
                             'Text on shipment?',
                             'Send a text message after shipment?'
                         ),
                         $this->makeSwitch(
-                            "DELIVERY",
+                            'DELIVERY',
                             'Text on delivery?',
                             'Send a text message after delivery?'
                         ),
                         [
                             'type' => 'text',
                             'name' => 'config[SMS77_FROM]',
-                            'label' => $this->l("From"),
+                            'label' => $this->l('From'),
                             'hint' => $this->l('Set a custom sender number or name.'),
                             'desc' => $this->l('Max 11 alphanumeric or 16 numeric characters.'),
-                            'size' => 16
+                            'size' => 16,
                         ],
                         $this->makeTextarea(
-                            "INVOICE",
+                            'INVOICE',
                             'Sets the text message sent to the customer after invoice generation.'
                         ),
                         $this->makeTextarea(
-                            "PAYMENT",
+                            'PAYMENT',
                             'Sets the text message sent to the customer after payment.'
                         ),
                         $this->makeTextarea(
-                            "SHIPMENT",
+                            'SHIPMENT',
                             'Sets the text message sent to the customer after shipment.'
                         ),
                         $this->makeTextarea(
-                            "DELIVERY",
+                            'DELIVERY',
                             'Sets the text message sent to the customer after delivery.'
                         ),
                     ],
                     'submit' => [
                         'title' => $this->l('Save'),
-                        'class' => 'btn btn-default pull-right'
-                    ]
-                ]
-            ]
+                        'class' => 'btn btn-default pull-right',
+                    ],
+                ],
+            ],
         ];
 
         $this->module = $this;
@@ -128,12 +128,12 @@ class BackendHelperForm extends HelperForm
                 [
                     'desc' => $this->l('Save'),
                     'href' => AdminController::$currentIndex . "&configure=$name&save$name&token="
-                     . Tools::getAdminTokenLite('AdminModules'),
+                        . Tools::getAdminTokenLite('AdminModules'),
                 ],
             'back' => [
                 'href' => AdminController::$currentIndex . '&token=' . Tools::getAdminTokenLite('AdminModules'),
-                'desc' => $this->l('Back to list')
-            ]
+                'desc' => $this->l('Back to list'),
+            ],
         ];
 
         $this->toolbar_scroll = true;
@@ -165,16 +165,16 @@ class BackendHelperForm extends HelperForm
             'is_bool' => true,
             'values' => [
                 [
-                    'id' => "on_" . Tools::strtolower($action) . "_on",
+                    'id' => 'on_' . Tools::strtolower($action) . '_on',
                     'value' => 1,
-                    'label' => $this->l('Yes')
+                    'label' => $this->l('Yes'),
                 ],
                 [
-                    'id' => "on_" . Tools::strtolower($action) . "_off",
+                    'id' => 'on_' . Tools::strtolower($action) . '_off',
                     'value' => 0,
-                    'label' => $this->l('No')
-                ]
-            ]
+                    'label' => $this->l('No'),
+                ],
+            ],
         ];
     }
 }
