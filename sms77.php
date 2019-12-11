@@ -9,7 +9,7 @@
  * You must not modify, adapt or create derivative works of this source code
  *
  * @author    sms77.io
- * @copyright 2019-present sms77.io
+ * @copyright 2019-present sms77 e.K.
  * @license   LICENSE
  */
 
