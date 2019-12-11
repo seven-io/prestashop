@@ -37,18 +37,18 @@ class Sms77 extends Module
     public function __construct()
     {
         $this->name = 'sms77';
-        $this->version = '1.0.0';
-        $this->author = 'sms77.io';
+        $this->version = '1.1.0';
+        $this->author = 'sms77 e.K.';
         $this->need_instance = 0;
 
         parent::__construct();
 
-        $this->__moduleDir = dirname(__FILE__);
+        $this->__moduleDir = __DIR__;
         $this->bootstrap = true;
-        $this->displayName = "sms77";
+        $this->displayName = 'sms77';
 
         $this->description =
-            $this->l('sms77.io module to programatically send text messages.');
+            $this->l('sms77.io module to programmatically send text messages.');
 
         $this->tab = 'advertising_marketing';
         $this->ps_versions_compliancy = [
@@ -56,18 +56,18 @@ class Sms77 extends Module
             'max' => _PS_VERSION_,
         ];
 
-        $this->config["SMS77_FROM"] = Configuration::get('PS_SHOP_NAME');
-        $this->config["SMS77_ON_INVOICE"] = "An invoice has been generated for your order.";
-        $this->config["SMS77_ON_INVOICE"] .=
-            " Log in to your customer account in order to have a look at it. Best regards!";
+        $this->config['SMS77_FROM'] = Configuration::get('PS_SHOP_NAME');
+        $this->config['SMS77_ON_INVOICE'] = 'An invoice has been generated for your order.';
+        $this->config['SMS77_ON_INVOICE'] .=
+            ' Log in to your customer account in order to have a look at it. Best regards!';
 
-        $this->config["SMS77_ON_PAYMENT"] = "A payment has been made for your order.";
-        $this->config["SMS77_ON_PAYMENT"] .= " Log in to your customer account for more information. Best regards!";
+        $this->config['SMS77_ON_PAYMENT'] = 'A payment has been made for your order.';
+        $this->config['SMS77_ON_PAYMENT'] .= ' Log in to your customer account for more information. Best regards!';
 
-        $this->config["SMS77_ON_SHIPMENT"] = "Your order has been shipped.";
-        $this->config["SMS77_ON_SHIPMENT"] .= " Log in to your customer account for more information. Best regards!";
+        $this->config['SMS77_ON_SHIPMENT'] = 'Your order has been shipped.';
+        $this->config['SMS77_ON_SHIPMENT'] .= ' Log in to your customer account for more information. Best regards!';
 
-        $this->config["SMS77_ON_DELIVERY"] = "Your order has been delivered. Enjoy your goods!";
+        $this->config['SMS77_ON_DELIVERY'] = 'Your order has been delivered. Enjoy your goods!';
     }
 
     public function install()
@@ -81,46 +81,46 @@ class Sms77 extends Module
         }
 
         return parent::install()
-            && $this->registerHook("actionOrderStatusPostUpdate");
+            && $this->registerHook('actionOrderStatusPostUpdate');
     }
 
     public function hookActionOrderStatusPostUpdate(array $data)
     {
-        $validateAndSend = function ($configKey, $number) {
+        $validateAndSend = static function ($configKey, $number) {
             if (Tools::strlen($number)) {
-                $apiKey = Configuration::get("SMS77_API_KEY");
+                $apiKey = Configuration::get('SMS77_API_KEY');
 
                 if (0 !== Tools::strlen($apiKey)) {
                     $api = new Client($apiKey);
-                    $api->sms($number, Configuration::get($configKey), ["from" => Configuration::get('SMS77_FROM')]);
+                    $api->sms($number, Configuration::get($configKey), ['from' => Configuration::get('SMS77_FROM')]);
                 }
             }
         };
 
-        $getToPhoneNumber = function (array $data) {
-            $order = isset($data["Order"]) ? $data["Order"] : $data["cart"];
+        $getToPhoneNumber = static function (array $data) {
+            $order = isset($data['Order']) ? $data['Order'] : $data['cart'];
             $addressId = Tools::strlen($order->id_address_delivery) ? $order->id_address_delivery : $order->id_address_invoice;
             $address = new Address((int)$addressId);
             return Tools::strlen($address->phone_mobile) ? $address->phone_mobile : $address->phone;
         };
 
-        $getAction = function () use ($data) {
-            $orderState = $data["newOrderStatus"];
-            $awaitingPayment = in_array($orderState->id, [1, 10, 13]);
+        $getAction = static function () use ($data) {
+            $orderState = $data['newOrderStatus'];
+            $awaitingPayment = in_array($orderState->id, [1, 10, 13], true);
             $isShipping = 4 === $orderState->id;
             $awaitingDelivery = 5 === $orderState->id;
-            $isPaid = in_array($orderState->id, [2, 11]);
+            $isPaid = in_array($orderState->id, [2, 11], true);
 
             $action = null;
 
             if ($awaitingPayment) {
-                $action = "INVOICE";
+                $action = 'INVOICE';
             } elseif ($isPaid) {
-                $action = "PAYMENT";
+                $action = 'PAYMENT';
             } elseif ($isShipping) {
-                $action = "SHIPMENT";
+                $action = 'SHIPMENT';
             } elseif ($awaitingDelivery) {
-                $action = "DELIVERY";
+                $action = 'DELIVERY';
             }
 
             return $action;
@@ -128,10 +128,8 @@ class Sms77 extends Module
 
         $action = $getAction();
 
-        if (null !== $action) {
-            if (1 == Configuration::get("SMS77_MSG_ON_$action")) {
-                $validateAndSend("SMS77_ON_$action", $getToPhoneNumber($data));
-            }
+        if (null !== $action && 1 === (int)Configuration::get("SMS77_MSG_ON_$action")) {
+            $validateAndSend("SMS77_ON_$action", $getToPhoneNumber($data));
         }
     }
 
@@ -152,10 +150,10 @@ class Sms77 extends Module
 
         if (Tools::isSubmit('submit' . $this->name)) {
             foreach (Tools::getValue('config') as $k => $v) {
-                if ("SMS77_API_KEY" == $k && 0 === Tools::strlen($v)) {
+                if ('SMS77_API_KEY' === $k && 0 === Tools::strlen($v)) {
                     $this->errors[] =
                         Tools::displayError($this->l(
-                            "An API key is required in order to send SMS. Get yours at sms77.io."
+                            'An API key is required in order to send SMS. Get yours at sms77.io.'
                         ));
                 }
 
