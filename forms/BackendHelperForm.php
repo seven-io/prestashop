@@ -82,6 +82,7 @@ class BackendHelperForm extends HelperForm
                             'label' => $this->l("From"),
                             'hint' => $this->l('Set a custom sender number or name.'),
                             'desc' => $this->l('Max 11 alphanumeric or 16 numeric characters.'),
+                            'size' => 16
                         ],
                         $this->makeTextarea(
                             "INVOICE",
