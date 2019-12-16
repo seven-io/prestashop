@@ -37,7 +37,7 @@ class Sms77_Api extends Module
     public function __construct()
     {
         $this->name = 'sms77_api';
-        $this->version = '1.1.0';
+        $this->version = '1.2.0';
         $this->author = 'sms77 e.K.';
         $this->need_instance = 0;
 
@@ -91,15 +91,19 @@ class Sms77_Api extends Module
                 $apiKey = Configuration::get('SMS77_API_KEY');
 
                 if (0 !== Tools::strlen($apiKey)) {
-                    $api = new Client($apiKey);
-                    $api->sms($number, Configuration::get($configKey), ['from' => Configuration::get('SMS77_FROM')]);
+                    $api = new Client($apiKey, 'prestashop');
+                    $api->sms($number, Configuration::get($configKey), [
+                        'from' => Configuration::get('SMS77_FROM')
+                    ]);
                 }
             }
         };
 
         $getToPhoneNumber = static function (array $data) {
             $order = isset($data['Order']) ? $data['Order'] : $data['cart'];
-            $addressId = Tools::strlen($order->id_address_delivery) ? $order->id_address_delivery : $order->id_address_invoice;
+            $addressId = Tools::strlen($order->id_address_delivery)
+                ? $order->id_address_delivery
+                : $order->id_address_invoice;
             $address = new Address((int)$addressId);
             return Tools::strlen($address->phone_mobile) ? $address->phone_mobile : $address->phone;
         };

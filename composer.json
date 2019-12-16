@@ -11,10 +11,15 @@
     "prepend-autoloader": false
   },
   "description": "Sms77.io API module for PrestaShop applications.",
-  "homepage": "https://github.com/sms77io/prestashop-module",
-  "keywords": ["prestashop", "sms"],
+  "homepage": "https://github.com/sms77io/prestashop-api",
+  "keywords": [
+    "prestashop",
+    "sms"
+  ],
   "license": "MIT",
+  "minimum-stability": "dev",
   "name": "sms77/prestashop-api",
+  "prefer-stable": true,
   "require": {
     "php": ">=5.6.0",
     "sms77/api": "dev-master"
@@ -22,8 +27,8 @@
   "support": {
     "email": "support@sms77.io",
     "rss": "https://www.sms77.io/de/feed/",
-    "source": "https://github.com/sms77io/prestashop-module",
-    "docs": "https://github.com/sms77io/prestashop-module"
+    "source": "https://github.com/sms77io/prestashop-api",
+    "docs": "https://github.com/sms77io/prestashop-api"
   },
   "type": "prestashop-module"
 }
