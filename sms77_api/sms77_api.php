@@ -22,7 +22,7 @@ use Sms77\Domain\Reviewer\QueryResult\ReviewerSettingsForForm;
 use PrestaShop\PrestaShop\Adapter\Entity\Tab;
 use Sms77\Api\Client;
 
-class Sms77 extends Module
+class Sms77_Api extends Module
 {
     protected $errors = [];
 
@@ -36,7 +36,7 @@ class Sms77 extends Module
 
     public function __construct()
     {
-        $this->name = 'sms77';
+        $this->name = 'sms77_api';
         $this->version = '1.1.0';
         $this->author = 'sms77 e.K.';
         $this->need_instance = 0;
@@ -45,7 +45,7 @@ class Sms77 extends Module
 
         $this->__moduleDir = __DIR__;
         $this->bootstrap = true;
-        $this->displayName = 'sms77';
+        $this->displayName = 'sms77 API';
 
         $this->description =
             $this->l('sms77.io module to programmatically send text messages.');

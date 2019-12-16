@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sms77io/php-api-wrapper.git",
-                "reference": "f5d20b70084481bc9d9094a27fc1c5b059d677ed"
+                "reference": "3758b054739eaf4253528d9b9b970939b19f9f81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sms77io/php-api-wrapper/zipball/f5d20b70084481bc9d9094a27fc1c5b059d677ed",
-                "reference": "f5d20b70084481bc9d9094a27fc1c5b059d677ed",
+                "url": "https://api.github.com/repos/sms77io/php-api-wrapper/zipball/3758b054739eaf4253528d9b9b970939b19f9f81",
+                "reference": "3758b054739eaf4253528d9b9b970939b19f9f81",
                 "shasum": ""
             },
             "require": {
@@ -47,7 +47,7 @@
                 }
             ],
             "description": "A simple PHP library for making CURL requests to sms77.io gateway.",
-            "time": "2019-11-26T14:11:45+00:00"
+            "time": "2019-12-11T09:34:45+00:00"
         }
     ],
     "packages-dev": [],

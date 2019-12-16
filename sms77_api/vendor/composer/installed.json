@@ -1,0 +1,47 @@
+[
+    {
+        "name": "sms77/api",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sms77io/php-api-wrapper.git",
+            "reference": "3758b054739eaf4253528d9b9b970939b19f9f81"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sms77io/php-api-wrapper/zipball/3758b054739eaf4253528d9b9b970939b19f9f81",
+            "reference": "3758b054739eaf4253528d9b9b970939b19f9f81",
+            "shasum": ""
+        },
+        "require": {
+            "ext-ctype": "*",
+            "ext-curl": "*"
+        },
+        "require-dev": {
+            "ext-json": "*",
+            "ext-simplexml": "*",
+            "ext-soap": "*",
+            "phpunit/phpunit": "^8"
+        },
+        "time": "2019-12-11T09:34:45+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Sms77\\Api\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Sms77",
+                "email": "info@sms77.io"
+            }
+        ],
+        "description": "A simple PHP library for making CURL requests to sms77.io gateway."
+    }
+]
