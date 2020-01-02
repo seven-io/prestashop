@@ -13,46 +13,47 @@
  * @license   LICENSE
  */
 
+use PrestaShop\PrestaShop\Adapter\Entity\Tab;
+use Sms77\Api\Client;
 use Sms77\Domain\Reviewer\Command\UpdateIsAllowedToReviewCommand;
 use Sms77\Domain\Reviewer\Exception\CannotCreateReviewerException;
 use Sms77\Domain\Reviewer\Exception\CannotToggleAllowedToReviewStatusException;
 use Sms77\Domain\Reviewer\Exception\ReviewerException;
 use Sms77\Domain\Reviewer\Query\GetReviewerSettingsForForm;
 use Sms77\Domain\Reviewer\QueryResult\ReviewerSettingsForForm;
-use PrestaShop\PrestaShop\Adapter\Entity\Tab;
-use Sms77\Api\Client;
 
-class Sms77_Api extends Module
+class Sms77 extends Module
 {
     protected $errors = [];
 
     protected $config = [
         'SMS77_API_KEY' => '',
-        'SMS77_MSG_ON_SHIPMENT' => true,
-        'SMS77_MSG_ON_DELIVERY' => true,
-        'SMS77_MSG_ON_PAYMENT' => true,
-        'SMS77_MSG_ON_INVOICE' => true,
+        'SMS77_MSG_ON_SHIPMENT' => false,
+        'SMS77_MSG_ON_DELIVERY' => false,
+        'SMS77_MSG_ON_PAYMENT' => false,
+        'SMS77_MSG_ON_INVOICE' => false,
     ];
 
     public function __construct()
     {
-        $this->name = 'sms77_api';
+        $this->name = 'sms77';
         $this->version = '1.2.0';
         $this->author = 'sms77 e.K.';
         $this->need_instance = 0;
+        $this->module_key = '7c33461cc60fc57e9746c6d288b6487e';
 
         parent::__construct();
 
-        $this->__moduleDir = __DIR__;
+        $this->__moduleDir = dirname(__FILE__);
         $this->bootstrap = true;
-        $this->displayName = 'sms77 API';
+        $this->displayName = 'sms77';
 
         $this->description =
             $this->l('sms77.io module to programmatically send text messages.');
 
         $this->tab = 'advertising_marketing';
         $this->ps_versions_compliancy = [
-            'min' => '1.7.6.0',
+            'min' => '1.6',
             'max' => _PS_VERSION_,
         ];
 
