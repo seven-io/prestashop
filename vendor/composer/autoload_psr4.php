@@ -5,6 +5,8 @@
 $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
-return [
-    'Sms77\\Api\\' => [$vendorDir . '/sms77/api/src'],
-];
+return array(
+    'libphonenumber\\' => array($vendorDir . '/giggsey/libphonenumber-for-php/src'),
+    'Sms77\\Api\\' => array($vendorDir . '/sms77/api/src'),
+    'Giggsey\\Locale\\' => array($vendorDir . '/giggsey/locale/src'),
+);

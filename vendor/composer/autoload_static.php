@@ -6,19 +6,35 @@ namespace Composer\Autoload;
 
 class ComposerStaticInitfaf4b4b9b0441202220deb2747f3068d
 {
-    public static $prefixLengthsPsr4 = [
-        'S' =>
-            [
-                'Sms77\\Api\\' => 10,
-            ],
-    ];
+    public static $prefixLengthsPsr4 = array (
+        'l' => 
+        array (
+            'libphonenumber\\' => 15,
+        ),
+        'S' => 
+        array (
+            'Sms77\\Api\\' => 10,
+        ),
+        'G' => 
+        array (
+            'Giggsey\\Locale\\' => 15,
+        ),
+    );
 
-    public static $prefixDirsPsr4 = [
-        'Sms77\\Api\\' =>
-            [
-                0 => __DIR__ . '/..' . '/sms77/api/src',
-            ],
-    ];
+    public static $prefixDirsPsr4 = array (
+        'libphonenumber\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src',
+        ),
+        'Sms77\\Api\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sms77/api/src',
+        ),
+        'Giggsey\\Locale\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/giggsey/locale/src',
+        ),
+    );
 
     public static function getInitializer(ClassLoader $loader)
     {

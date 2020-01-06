@@ -17,6 +17,11 @@ Click on the settings button and look through the available options.
 By default, the plugin will send a message on all available events.
 Remember to set your API-Key in order to be able to send messages.
 
+Available message placeholders:
+- {0} => First name
+- {1} => Last name
+- {2} => Order-ID (where available)
+
 #### TODO:
 - Add tests
 - Add more translations

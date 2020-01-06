@@ -1,57 +1,178 @@
 [
-  {
-    "name": "sms77/api",
-    "version": "dev-master",
-    "version_normalized": "9999999-dev",
-    "source": {
-      "type": "git",
-      "url": "https://github.com/sms77io/php-api.git",
-      "reference": "cc24a959e5d085f702281a0a9b9041e96f19ee76"
+    {
+        "name": "giggsey/libphonenumber-for-php",
+        "version": "8.11.1",
+        "version_normalized": "8.11.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/giggsey/libphonenumber-for-php.git",
+            "reference": "f6a367f08e323edc1c27546d8d5818bb016d812e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/f6a367f08e323edc1c27546d8d5818bb016d812e",
+            "reference": "f6a367f08e323edc1c27546d8d5818bb016d812e",
+            "shasum": ""
+        },
+        "require": {
+            "ext-mbstring": "*",
+            "giggsey/locale": "^1.7",
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "pear/pear-core-minimal": "^1.9",
+            "pear/pear_exception": "^1.0",
+            "pear/versioncontrol_git": "^0.5",
+            "phing/phing": "^2.7",
+            "php-coveralls/php-coveralls": "^1.0|^2.0",
+            "phpunit/phpunit": "^4.8.36|^5.0",
+            "symfony/console": "^2.8|^3.0"
+        },
+        "time": "2019-12-11T10:03:19+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "8.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "libphonenumber\\": "src/"
+            },
+            "exclude-from-classmap": [
+                "/src/data/",
+                "/src/carrier/data/",
+                "/src/geocoding/data/",
+                "/src/timezone/data/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "authors": [
+            {
+                "name": "Joshua Gigg",
+                "email": "giggsey@gmail.com",
+                "homepage": "https://giggsey.com/"
+            }
+        ],
+        "description": "PHP Port of Google's libphonenumber",
+        "homepage": "https://github.com/giggsey/libphonenumber-for-php",
+        "keywords": [
+            "geocoding",
+            "geolocation",
+            "libphonenumber",
+            "mobile",
+            "phonenumber",
+            "validation"
+        ]
     },
-    "dist": {
-      "type": "zip",
-      "url": "https://api.github.com/repos/sms77io/php-api/zipball/cc24a959e5d085f702281a0a9b9041e96f19ee76",
-      "reference": "cc24a959e5d085f702281a0a9b9041e96f19ee76",
-      "shasum": ""
+    {
+        "name": "giggsey/locale",
+        "version": "1.8",
+        "version_normalized": "1.8.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/giggsey/Locale.git",
+            "reference": "85a1b251bad11c986fec2a051b10d4b80a5caa1b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/giggsey/Locale/zipball/85a1b251bad11c986fec2a051b10d4b80a5caa1b",
+            "reference": "85a1b251bad11c986fec2a051b10d4b80a5caa1b",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "pear/pear-core-minimal": "^1.9",
+            "pear/pear_exception": "^1.0",
+            "pear/versioncontrol_git": "^0.5",
+            "phing/phing": "~2.7",
+            "php-coveralls/php-coveralls": "^1.0|^2.0",
+            "phpunit/phpunit": "^4.8|^5.0",
+            "symfony/console": "^2.8|^3.0|^4.0",
+            "symfony/filesystem": "^2.8|^3.0|^4.0",
+            "symfony/finder": "^2.8|^3.0|^4.0",
+            "symfony/process": "^2.8|^3.0|^4.0"
+        },
+        "time": "2019-10-09T18:53:14+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Giggsey\\Locale\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Joshua Gigg",
+                "email": "giggsey@gmail.com",
+                "homepage": "http://giggsey.com/"
+            }
+        ],
+        "description": "Locale functions required by libphonenumber-for-php"
     },
-    "require": {
-      "ext-ctype": "*",
-      "ext-curl": "*",
-      "ext-mbstring": "*",
-      "php": ">=5.6.0"
-    },
-    "require-dev": {
-      "ext-json": "*",
-      "ext-simplexml": "*",
-      "ext-soap": "*",
-      "phpunit/phpunit": "^8"
-    },
-    "time": "2019-12-16T10:53:15+00:00",
-    "type": "library",
-    "installation-source": "source",
-    "autoload": {
-      "psr-4": {
-        "Sms77\\Api\\": "src/"
-      }
-    },
-    "notification-url": "https://packagist.org/downloads/",
-    "license": [
-      "MIT"
-    ],
-    "authors": [
-      {
-        "name": "André Matthies",
-        "email": "a.matthies@sms77.io",
-        "homepage": "http://www.sms77.io",
-        "role": "Developer"
-      }
-    ],
-    "description": "A simple PHP library for making CURL requests to sms77.io gateway.",
-    "homepage": "https://github.com/sms77io/php-api",
-    "keywords": [
-      "2fa",
-      "gateway",
-      "sms"
-    ]
-  }
+    {
+        "name": "sms77/api",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sms77io/php-api.git",
+            "reference": "cc24a959e5d085f702281a0a9b9041e96f19ee76"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sms77io/php-api/zipball/cc24a959e5d085f702281a0a9b9041e96f19ee76",
+            "reference": "cc24a959e5d085f702281a0a9b9041e96f19ee76",
+            "shasum": ""
+        },
+        "require": {
+            "ext-ctype": "*",
+            "ext-curl": "*",
+            "ext-mbstring": "*",
+            "php": ">=5.6.0"
+        },
+        "require-dev": {
+            "ext-json": "*",
+            "ext-simplexml": "*",
+            "ext-soap": "*",
+            "phpunit/phpunit": "^8"
+        },
+        "time": "2019-12-16T10:53:15+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Sms77\\Api\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "André Matthies",
+                "email": "a.matthies@sms77.io",
+                "homepage": "http://www.sms77.io",
+                "role": "Developer"
+            }
+        ],
+        "description": "A simple PHP library for making CURL requests to sms77.io gateway.",
+        "homepage": "https://github.com/sms77io/php-api",
+        "keywords": [
+            "2fa",
+            "gateway",
+            "sms"
+        ]
+    }
 ]

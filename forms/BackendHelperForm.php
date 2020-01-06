@@ -38,16 +38,22 @@ class BackendHelperForm extends HelperForm
             'config[SMS77_MSG_ON_SHIPMENT]' => Configuration::get('SMS77_MSG_ON_SHIPMENT'),
             'config[SMS77_MSG_ON_PAYMENT]' => Configuration::get('SMS77_MSG_ON_PAYMENT'),
             'config[SMS77_FROM]' => Configuration::get('SMS77_FROM'),
+            'config[SMS77_ON_GENERIC]' => Configuration::get('SMS77_ON_GENERIC'),
         ];
 
         $this->fields_form = [
             [
                 'form' => [
+                    'tabs' => [
+                        'settings' => $this->l('Configuration'),
+                        'bulk' => $this->l('Bulk SMS'),
+                    ],
                     'legend' => [
                         'title' => $this->l('Settings'),
                     ],
                     'input' => [
                         [
+                            'tab' => 'settings',
                             'type' => 'text',
                             'name' => 'config[SMS77_API_KEY]',
                             'label' => $this->l('API-Key'),
@@ -77,6 +83,7 @@ class BackendHelperForm extends HelperForm
                             'Send a text message after delivery?'
                         ),
                         [
+                            'tab' => 'settings',
                             'type' => 'text',
                             'name' => 'config[SMS77_FROM]',
                             'label' => $this->l('From'),
@@ -99,6 +106,11 @@ class BackendHelperForm extends HelperForm
                         $this->makeTextarea(
                             'DELIVERY',
                             'Sets the text message sent to the customer after delivery.'
+                        ),
+                        $this->makeTextarea(
+                            'GENERIC',
+                            'Send out any message to all of your customers.',
+                            'bulk'
                         ),
                     ],
                     'submit' => [
@@ -139,11 +151,12 @@ class BackendHelperForm extends HelperForm
         $this->toolbar_scroll = true;
     }
 
-    private function makeTextarea($action, $trans)
+    private function makeTextarea($action, $trans, $tab = 'settings')
     {
         $trans = $this->l($trans);
 
         return [
+            'tab' => $tab,
             'type' => 'textarea',
             'name' => "config[SMS77_ON_$action]",
             'label' => $trans,
@@ -152,11 +165,12 @@ class BackendHelperForm extends HelperForm
         ];
     }
 
-    private function makeSwitch($action, $label, $desc)
+    private function makeSwitch($action, $label, $desc, $tab = 'settings')
     {
         $descHit = $this->l($desc);
 
         return [
+            'tab' => $tab,
             'type' => 'switch',
             'name' => "config[SMS77_MSG_ON_$action]",
             'label' => $this->l($label),

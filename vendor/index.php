@@ -1,8 +1,8 @@
 <?php
 /*
- *  This file is part of sms77.io PrestaShop API.
+ *  This file is part of sms77.io PrestaShop API module.
  *
- *  Copyright (C) 2019-present sms77 e.K.  <www.sms77.io>
+ *  Copyright (C) 2019-present sms77 e.K. <www.sms77.io>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
