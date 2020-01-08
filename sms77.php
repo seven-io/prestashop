@@ -179,13 +179,12 @@ class Sms77 extends Module
         if (Tools::isSubmit('submit' . $this->name)) {
             foreach (Tools::getValue('config') as $k => $v) {
                 if ('SMS77_API_KEY' === $k && 0 === Tools::strlen($v)) {
-                    $this->errors[] =
-                        Tools::displayError($this->l(
-                            'An API key is required in order to send SMS. Get yours at sms77.io.'
-                        ));
+                    $this->errors[] = Tools::displayError($this->l(
+                        'An API key is required in order to send SMS. Get yours at http://sms77.io.'
+                    ));
                 }
 
-                if ('SMS77_ON_GENERIC' === $k) {
+                if ('SMS77_ON_GENERIC' === $k && Tools::strlen($v)) {
                     $addresses = self::dbQuery(
                         'id_country, id_customer, phone, phone_mobile',
                         'address',
@@ -208,7 +207,6 @@ class Sms77 extends Module
                             $numbers[] = $d['phone_mobile'];
                         }
 
-
                         $numbers = array_filter($numbers, function ($number) use ($d) {
                             try {
                                 $isoCode = self::dbQuery(
@@ -217,7 +215,7 @@ class Sms77 extends Module
                                     'q.id_country = ' . $d['id_country']);
                                 $isoCode = array_shift($isoCode)['iso_code'];
                                 $numberProto = $this->phoneNumberUtil->parse($number, $isoCode);
-                                return $this->phoneNumberUtil->isValidNumberForRegion($numberProto, $isoCode);
+                                return $this->phoneNumberUtil->isValidNumber($numberProto);
                             } catch (NumberParseException $e) {
                                 return false;
                             }
@@ -241,9 +239,9 @@ class Sms77 extends Module
                         }, $valids);
                         $this->validateAndSend($k, implode(',', array_unique($phoneNumbers)));
                     }
+                } else {
+                    Configuration::updateValue($k, $v);
                 }
-
-                Configuration::updateValue($k, $v);
             }
         }
 
