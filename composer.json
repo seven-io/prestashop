@@ -8,6 +8,7 @@
     }
   ],
   "config": {
+    "preferred-install": "disgt",
     "prepend-autoloader": false
   },
   "description": "Sms77.io API module for PrestaShop applications.",
@@ -22,7 +23,7 @@
   "prefer-stable": true,
   "require": {
     "php": ">=5.6.0",
-    "sms77/api": "dev-master",
+    "sms77/api": "1.0.0",
     "giggsey/libphonenumber-for-php": "^8.11"
   },
   "support": {

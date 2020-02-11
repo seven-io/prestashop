@@ -67,7 +67,7 @@ class Client
     {
         $options = $this->buildOptions([
             'to' => $to,
-            'text' => $text,
+            'text' => $text
         ], $extra);
 
         (new SmsValidator($options))->validate();
@@ -101,7 +101,7 @@ class Client
     {
         $options = $this->buildOptions([
             'to' => $to,
-            'text' => $text,
+            'text' => $text
         ], $extra);
 
         (new VoiceValidator($options))->validate();
@@ -113,7 +113,7 @@ class Client
     {
         $required = array_merge($required, [
             'p' => $this->apiKey,
-            'sendwith' => '' === $this->sendWith ? 'unknown' : $this->sendWith,
+            'sendwith' => '' === $this->sendWith ? 'unknown' : $this->sendWith
         ]);
 
         return array_merge($required, $extra);

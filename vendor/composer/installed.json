@@ -1,17 +1,17 @@
 [
     {
         "name": "giggsey/libphonenumber-for-php",
-        "version": "8.11.1",
-        "version_normalized": "8.11.1.0",
+        "version": "8.11.3",
+        "version_normalized": "8.11.3.0",
         "source": {
             "type": "git",
             "url": "https://github.com/giggsey/libphonenumber-for-php.git",
-            "reference": "f6a367f08e323edc1c27546d8d5818bb016d812e"
+            "reference": "0329cf6a6ede750a78e7165b61fcc83cd72e9768"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/f6a367f08e323edc1c27546d8d5818bb016d812e",
-            "reference": "f6a367f08e323edc1c27546d8d5818bb016d812e",
+            "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/0329cf6a6ede750a78e7165b61fcc83cd72e9768",
+            "reference": "0329cf6a6ede750a78e7165b61fcc83cd72e9768",
             "shasum": ""
         },
         "require": {
@@ -28,7 +28,7 @@
             "phpunit/phpunit": "^4.8.36|^5.0",
             "symfony/console": "^2.8|^3.0"
         },
-        "time": "2019-12-11T10:03:19+00:00",
+        "time": "2020-01-28T11:48:03+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -121,62 +121,18 @@
         "description": "Locale functions required by libphonenumber-for-php"
     },
     {
-        "name": "mervick/emojionearea",
-        "version": "v3.4.1",
-        "version_normalized": "3.4.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/mervick/emojionearea.git",
-            "reference": "dc73dc556fdc6e82c5d26847533b893ece255ce1"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/mervick/emojionearea/zipball/dc73dc556fdc6e82c5d26847533b893ece255ce1",
-            "reference": "dc73dc556fdc6e82c5d26847533b893ece255ce1",
-            "shasum": ""
-        },
-        "time": "2018-02-09T22:44:43+00:00",
-        "type": "plugin",
-        "extra": {
-            "asset-installer-paths": {
-                "npm-asset-library": "vendor/npm",
-                "bower-asset-library": "vendor/bower"
-            }
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Andrey Izman",
-                "email": "izmanw@gmail.com"
-            },
-            {
-                "name": "Klas Lundberg",
-                "email": "klas.lundberg@instinct.se"
-            },
-            {
-                "name": "Merlin Mason",
-                "email": "info@merlinmason.co.uk"
-            }
-        ],
-        "description": "WYSIWYG-like EmojiOne Converter / Picker Plugin for jQuery"
-    },
-    {
         "name": "sms77/api",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/sms77io/php-api.git",
-            "reference": "cc24a959e5d085f702281a0a9b9041e96f19ee76"
+            "reference": "2aa0c6078d50948757cf7de582cc489899b384e3"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sms77io/php-api/zipball/cc24a959e5d085f702281a0a9b9041e96f19ee76",
-            "reference": "cc24a959e5d085f702281a0a9b9041e96f19ee76",
+            "url": "https://api.github.com/repos/sms77io/php-api/zipball/2aa0c6078d50948757cf7de582cc489899b384e3",
+            "reference": "2aa0c6078d50948757cf7de582cc489899b384e3",
             "shasum": ""
         },
         "require": {
@@ -191,7 +147,7 @@
             "ext-soap": "*",
             "phpunit/phpunit": "^8"
         },
-        "time": "2019-12-16T10:53:15+00:00",
+        "time": "2019-12-16T13:23:59+00:00",
         "type": "library",
         "installation-source": "source",
         "autoload": {

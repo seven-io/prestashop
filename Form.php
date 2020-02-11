@@ -13,33 +13,26 @@
  * @license   LICENSE
  */
 
-class BackendHelperForm extends HelperForm
+class Form extends HelperForm
 {
     public function __construct($name)
     {
-        parent::__construct($name);
+        parent::__construct();
 
-        $defaultLang = Configuration::get('PS_LANG_DEFAULT');
-
+        $defaultLang = (int)Configuration::get('PS_LANG_DEFAULT');
         $this->allow_employee_form_lang = $defaultLang;
-
         $this->currentIndex = AdminController::$currentIndex . "&configure=$name";
-
         $this->default_form_language = $defaultLang;
 
-        $this->fields_value = [
-            'config[SMS77_API_KEY]' => Configuration::get('SMS77_API_KEY'),
-            'config[SMS77_ON_INVOICE]' => Configuration::get('SMS77_ON_INVOICE'),
-            'config[SMS77_ON_DELIVERY]' => Configuration::get('SMS77_ON_DELIVERY'),
-            'config[SMS77_ON_SHIPMENT]' => Configuration::get('SMS77_ON_SHIPMENT'),
-            'config[SMS77_ON_PAYMENT]' => Configuration::get('SMS77_ON_PAYMENT'),
-            'config[SMS77_MSG_ON_DELIVERY]' => Configuration::get('SMS77_MSG_ON_DELIVERY'),
-            'config[SMS77_MSG_ON_INVOICE]' => Configuration::get('SMS77_MSG_ON_INVOICE'),
-            'config[SMS77_MSG_ON_SHIPMENT]' => Configuration::get('SMS77_MSG_ON_SHIPMENT'),
-            'config[SMS77_MSG_ON_PAYMENT]' => Configuration::get('SMS77_MSG_ON_PAYMENT'),
-            'config[SMS77_FROM]' => Configuration::get('SMS77_FROM'),
-            'config[SMS77_ON_GENERIC]' => Configuration::get('SMS77_ON_GENERIC'),
-        ];
+        $configuration = Configuration::getMultiple(array_keys(Constants::$configuration));
+
+        foreach ($configuration as $k => $v) {
+            $configuration["config[$k]"] = $v;
+
+            unset($configuration[$k]);
+        }
+
+        $this->fields_value = $configuration;
 
         $this->fields_form = [
             [
@@ -62,22 +55,22 @@ class BackendHelperForm extends HelperForm
                             'required' => true,
                         ],
 
-                        $this->makeSwitch(
+                        $this->makeBool(
                             'INVOICE',
                             'Text on invoice generation?',
                             'Send a text message after an invoice has been created?'
                         ),
-                        $this->makeSwitch(
+                        $this->makeBool(
                             'PAYMENT',
                             'Text on payment?',
                             'Send a text message after payment has been received?'
                         ),
-                        $this->makeSwitch(
+                        $this->makeBool(
                             'SHIPMENT',
                             'Text on shipment?',
                             'Send a text message after shipment?'
                         ),
-                        $this->makeSwitch(
+                        $this->makeBool(
                             'DELIVERY',
                             'Text on delivery?',
                             'Send a text message after delivery?'
@@ -92,23 +85,42 @@ class BackendHelperForm extends HelperForm
                             'size' => 16,
                         ],
                         $this->makeTextarea(
-                            'INVOICE',
+                            'ON_INVOICE',
                             'Sets the text message sent to the customer after invoice generation.'
                         ),
                         $this->makeTextarea(
-                            'PAYMENT',
+                            'ON_PAYMENT',
                             'Sets the text message sent to the customer after payment.'
                         ),
                         $this->makeTextarea(
-                            'SHIPMENT',
+                            'ON_SHIPMENT',
                             'Sets the text message sent to the customer after shipment.'
                         ),
                         $this->makeTextarea(
-                            'DELIVERY',
+                            'ON_DELIVERY',
                             'Sets the text message sent to the customer after delivery.'
                         ),
                         $this->makeTextarea(
-                            'GENERIC',
+                            'SIGNATURE',
+                            'Sets a signature to add to all messages.'
+                        ),
+                        [
+                            'tab' => 'settings',
+                            'type' => 'radio',
+                            'name' => 'config[SMS77_SIGNATURE_POSITION]',
+                            'label' => $this->l('Signature position'),
+                            'hint' => $this->l('Decides at which position the signature gets inserted.'),
+                            'desc' => $this->l('Decides at which position the signature gets inserted.'),
+                            'values' => array_map(function ($pos) {
+                                return [
+                                    'id' => "sms77_config_signature_position_$pos",
+                                    'label' => $pos,
+                                    'value' => $pos,
+                                ];
+                            }, Constants::$signature_positions),
+                        ],
+                        $this->makeTextarea(
+                            'BULK',
                             'Send out any message to all of your customers.',
                             'bulk'
                         ),
@@ -122,18 +134,14 @@ class BackendHelperForm extends HelperForm
         ];
 
         $this->module = $this;
-
         $this->name = $name;
-
         $this->name_controller = $name;
-
         $this->title = $name;
 
         $this->token = Tools::getAdminTokenLite('AdminModules');
 
         $this->show_toolbar = true;
-
-        $this->submit_action = 'submit' . $name;
+        $this->submit_action = "submit$name";
 
         $this->toolbar_btn = [
             'save' =>
@@ -158,37 +166,42 @@ class BackendHelperForm extends HelperForm
         return [
             'tab' => $tab,
             'type' => 'textarea',
-            'name' => "config[SMS77_ON_$action]",
+            'name' => "config[SMS77_$action]",
             'label' => $trans,
             'hint' => $trans,
             'desc' => $trans,
         ];
     }
 
-    private function makeSwitch($action, $label, $desc, $tab = 'settings')
+    private function makeSwitch($action, $label, $desc, $values, $isBool)
     {
         $descHit = $this->l($desc);
 
         return [
-            'tab' => $tab,
+            'tab' => 'settings',
             'type' => 'switch',
-            'name' => "config[SMS77_MSG_ON_$action]",
+            'name' => "config[SMS77_$action]",
             'label' => $this->l($label),
             'desc' => $descHit,
             'hint' => $descHit,
-            'is_bool' => true,
-            'values' => [
-                [
-                    'id' => 'on_' . Tools::strtolower($action) . '_on',
-                    'value' => 1,
-                    'label' => $this->l('Yes'),
-                ],
-                [
-                    'id' => 'on_' . Tools::strtolower($action) . '_off',
-                    'value' => 0,
-                    'label' => $this->l('No'),
-                ],
-            ],
+            'is_bool' => $isBool,
+            'values' => $values,
         ];
+    }
+
+    private function makeBool($action, $label, $desc)
+    {
+        $sAction = Tools::strtolower($action);
+
+        return $this->makeSwitch("MSG_ON_$action", $label, $desc, [
+            [
+                'id' => 'on_' . $sAction . '_on',
+                'value' => 1
+            ],
+            [
+                'id' => 'on_' . $sAction . '_off',
+                'value' => 0
+            ],
+        ], true);
     }
 }
