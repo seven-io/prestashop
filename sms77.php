@@ -13,33 +13,20 @@
  * @license   LICENSE
  */
 
-use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberUtil;
-use PrestaShop\PrestaShop\Adapter\Entity\Tab;
-use Sms77\Api\Client;
-use Sms77\Domain\Reviewer\Command\UpdateIsAllowedToReviewCommand;
-use Sms77\Domain\Reviewer\Exception\CannotCreateReviewerException;
-use Sms77\Domain\Reviewer\Exception\CannotToggleAllowedToReviewStatusException;
-use Sms77\Domain\Reviewer\Exception\ReviewerException;
-use Sms77\Domain\Reviewer\Query\GetReviewerSettingsForForm;
-use Sms77\Domain\Reviewer\QueryResult\ReviewerSettingsForForm;
+
+require_once dirname(__FILE__) . "/Constants.php";
 
 class Sms77 extends Module
 {
-    protected $errors = [];
-
-    protected $config = [
-        'SMS77_API_KEY' => '',
-        'SMS77_MSG_ON_SHIPMENT' => false,
-        'SMS77_MSG_ON_DELIVERY' => false,
-        'SMS77_MSG_ON_PAYMENT' => false,
-        'SMS77_MSG_ON_INVOICE' => false,
-    ];
+    protected $config;
 
     public function __construct()
     {
+        $this->config = Constants::$configuration;
+
         $this->name = 'sms77';
-        $this->version = '1.3.0';
+        $this->version = '1.4.0';
         $this->author = 'sms77 e.K.';
         $this->need_instance = 0;
         $this->module_key = '7c33461cc60fc57e9746c6d288b6487e';
@@ -59,52 +46,115 @@ class Sms77 extends Module
             'max' => _PS_VERSION_,
         ];
 
-        $this->config['SMS77_FROM'] = Configuration::get('PS_SHOP_NAME'); //defaults to the shop name
-
-        $this->config['SMS77_ON_INVOICE'] = 'Dear {0} {1}. An invoice has been generated for your order #{2}.';
-        $this->config['SMS77_ON_INVOICE'] .=
-            ' Log in to your account in order to have a look at it. Best regards!';
-
-        $this->config['SMS77_ON_PAYMENT'] = 'Dear {0} {1}. A payment has been made for your order #{2}.';
-        $this->config['SMS77_ON_PAYMENT'] .= ' Log in to your account for more information. Best regards!';
-
-        $this->config['SMS77_ON_SHIPMENT'] = 'Dear {0} {1}. Your order #{2} has been shipped.';
-        $this->config['SMS77_ON_SHIPMENT'] .= ' Log in to your customer account for more information. Best regards!';
-
-        $this->config['SMS77_ON_DELIVERY'] = 'Dear {0} {1}. Your order #{2} has been delivered. Enjoy your goods!';
+        $this->config['SMS77_FROM'] = Configuration::get('PS_SHOP_NAME'); // defaults to the shop name
 
         $this->phoneNumberUtil = PhoneNumberUtil::getInstance();
     }
 
-    public function install()
+    private function dbQuery($select, $from, $where)
     {
-        if (Shop::isFeatureActive()) {
-            Shop::setContext(Shop::CONTEXT_ALL);
-        }
-
-        foreach ($this->config as $k => $v) {
-            Configuration::updateValue($k, $v);
-        }
-
-        return parent::install()
-            && $this->registerHook('actionOrderStatusPostUpdate');
+        $sql = new DbQuery();
+        $sql->select($select);
+        $sql->from($from, 'q');
+        $sql->where($where);
+        return Db::getInstance()->executeS($sql);
     }
 
-    private function validateAndSend($msg, $number)
+    public function getContent()
     {
-        if (!Tools::strlen($number)) {
-            return null;
+        $output = null;
+
+        if (Tools::isSubmit('submit' . $this->name)) {
+            foreach (Tools::getValue('config') as $k => $v) {
+                if ('SMS77_API_KEY' === $k && 0 === Tools::strlen($v)) {
+                    $output .=
+                        $this->displayError(
+                            $this->l('An API key is required in order to send SMS. Get yours at http://sms77.io.')
+                        );
+                }
+
+                if ('SMS77_BULK' === $k && Tools::strlen($v)) {
+                    if (0 === Tools::strlen($this->getSetting('API_KEY'))) {
+                        $output .= $this->displayError(
+                            $this->l('An API key is required in order to send SMS. Get yours at http://sms77.io.')
+                        );
+                    } else {
+                        $addresses = self::dbQuery(
+                            'id_country, id_customer, phone, phone_mobile',
+                            'address',
+                            "q.active = 1 AND q.deleted = 0 AND q.id_customer != 0 AND q.phone_mobile<>'0000000000'"
+                        );
+
+                        $merged = array_map(static function ($address) {
+                            $customer = self::dbQuery(
+                                '*',
+                                'customer',
+                                'q.active = 1 AND q.deleted = 0 AND q.id_customer = ' . $address['id_customer']
+                            );
+                            return $address + array_shift($customer);
+                        }, $addresses);
+
+                        $phoneNumberUtil = $this->phoneNumberUtil;
+
+                        $valids = array_filter($merged, function ($d) use ($phoneNumberUtil) {
+                            $numbers = [];
+                            if (isset($d['phone'])) {
+                                $numbers[] = $d['phone'];
+                            }
+                            if (isset($d['phone_mobile'])) {
+                                $numbers[] = $d['phone_mobile'];
+                            }
+
+                            $numbers = array_filter($numbers, function ($number) use ($d, $phoneNumberUtil) {
+                                try {
+                                    $isoCode = self::dbQuery(
+                                        'iso_code',
+                                        'country',
+                                        'q.id_country = ' . $d['id_country']
+                                    );
+                                    $isoCode = array_shift($isoCode)['iso_code'];
+                                    $numberProto = $phoneNumberUtil->parse($number, $isoCode);
+                                    return $phoneNumberUtil->isValidNumber($numberProto);
+                                } catch (NumberParseException $e) {
+                                    return false;
+                                }
+                            });
+
+                            return count($numbers) ? true : false;
+                        });
+
+                        $hasPlaceholder = preg_match('{0}', $v) || preg_match('{1}', $v);
+                        if ($hasPlaceholder) { // this is a personalized message
+                            $msg = $v;
+
+                            foreach ($valids as $valid) {
+                                $this->validateAndSend(
+                                    $this->personalize($msg, $valid),
+                                    '' === $valid['phone'] ? $valid['phone_mobile'] : $valid['phone']
+                                );
+                            }
+                        } else {
+                            $phoneNumbers = array_map(static function ($d) {
+                                return '' === $d['phone_mobile'] ? $d['phone'] : $d['phone_mobile'];
+                            }, $valids);
+
+                            $this->validateAndSend($k, implode(',', array_unique($phoneNumbers)));
+                        }
+                    }
+                } else {
+                    Configuration::updateValue($k, $v);
+                }
+            }
+
+            $output .= $this->displayConfirmation($this->l('Settings updated'));
         }
 
-        $apiKey = Configuration::get('SMS77_API_KEY');
-        if (!Tools::strlen($apiKey)) {
-            return null;
-        }
+        return $output . (new Form($this->name))->generate();
+    }
 
-        $api = new Client($apiKey, 'prestashop');
-        $api->sms($number, $msg, [
-            'from' => Configuration::get('SMS77_FROM')
-        ]);
+    private function getSetting($key)
+    {
+        return Configuration::get("SMS77_$key");
     }
 
     public function hookActionOrderStatusPostUpdate(array $data)
@@ -146,108 +196,25 @@ class Sms77 extends Module
         $action = $getAction();
 
         if (null !== $action && 1 === (int)Configuration::get("SMS77_MSG_ON_$action")) {
-            $this->validateAndSend(
-                $this->personalize(Configuration::get("SMS77_ON_$action"), (array)$address, $data['id_order']),
-                Tools::strlen($address->phone_mobile) ? $address->phone_mobile : $address->phone);
+            $action = Configuration::get("SMS77_ON_$action");
+            $personalized = $this->personalize($action, (array)$address, $data['id_order']);
+            $recipient = Tools::strlen($address->phone_mobile) ? $address->phone_mobile : $address->phone;
+            $this->validateAndSend($personalized, $recipient);
         }
     }
 
-    public function uninstall()
+    public function install()
     {
-        foreach ($this->config as $k) {
-            Configuration::deleteByName($k);
+        if (Shop::isFeatureActive()) {
+            Shop::setContext(Shop::CONTEXT_ALL);
         }
 
-        return parent::uninstall();
-    }
-
-    private static function dbQuery($select, $from, $where)
-    {
-        $sql = new DbQuery();
-        $sql->select($select);
-        $sql->from($from, 'q');
-        $sql->where($where);
-        return Db::getInstance()->executeS($sql);
-    }
-
-    public function getContent()
-    {
-        require_once $this->__moduleDir . '/forms/BackendHelperForm.php';
-
-        $output = null;
-
-        if (Tools::isSubmit('submit' . $this->name)) {
-            foreach (Tools::getValue('config') as $k => $v) {
-                if ('SMS77_API_KEY' === $k && 0 === Tools::strlen($v)) {
-                    $this->errors[] = Tools::displayError($this->l(
-                        'An API key is required in order to send SMS. Get yours at http://sms77.io.'
-                    ));
-                }
-
-                if ('SMS77_ON_GENERIC' === $k && Tools::strlen($v)) {
-                    $addresses = self::dbQuery(
-                        'id_country, id_customer, phone, phone_mobile',
-                        'address',
-                        "q.active = 1 AND q.deleted = 0 AND q.id_customer != 0 AND q.phone_mobile<>'0000000000'");
-
-                    $merged = array_map(static function ($address) {
-                        $customer = self::dbQuery(
-                            '*',
-                            'customer',
-                            'q.active = 1 AND q.deleted = 0 AND q.id_customer = ' . $address['id_customer']);
-                        return $address + array_shift($customer);
-                    }, $addresses);
-
-                    $valids = array_filter($merged, function ($d) {
-                        $numbers = [];
-                        if (isset($d['phone'])) {
-                            $numbers[] = $d['phone'];
-                        }
-                        if (isset($d['phone_mobile'])) {
-                            $numbers[] = $d['phone_mobile'];
-                        }
-
-                        $numbers = array_filter($numbers, function ($number) use ($d) {
-                            try {
-                                $isoCode = self::dbQuery(
-                                    'iso_code',
-                                    'country',
-                                    'q.id_country = ' . $d['id_country']);
-                                $isoCode = array_shift($isoCode)['iso_code'];
-                                $numberProto = $this->phoneNumberUtil->parse($number, $isoCode);
-                                return $this->phoneNumberUtil->isValidNumber($numberProto);
-                            } catch (NumberParseException $e) {
-                                return false;
-                            }
-                        });
-
-                        return count($numbers) ? true : false;
-                    });
-
-                    if (preg_match('{0}', $v) || preg_match('{1}', $v)) { //this is a personalized message
-                        $msg = $v;
-
-                        foreach ($valids as $valid) {
-                            $this->validateAndSend(
-                                $this->personalize($msg, $valid),
-                                '' === $valid['phone'] ? $valid['phone_mobile'] : $valid['phone']
-                            );
-                        }
-                    } else {
-                        $phoneNumbers = array_map(static function ($d) {
-                            return '' === $d['phone_mobile'] ? $d['phone'] : $d['phone_mobile'];
-                        }, $valids);
-                        $this->validateAndSend($k, implode(',', array_unique($phoneNumbers)));
-                    }
-                } else {
-                    Configuration::updateValue($k, $v);
-                }
-            }
+        foreach ($this->config as $k => $v) {
+            Configuration::updateValue($k, $v);
         }
 
-        $output .= $this->displayConfirmation($this->l('Settings updated'));
-
-        return $output . (new BackendHelperForm($this->name))->generate();
+        return parent::install()
+            && $this->registerHook('actionOrderStatusPostUpdate');
     }
 
     private function personalize($msg, $data, $orderId = null)
@@ -256,7 +223,7 @@ class Sms77 extends Module
         $hasLastName = false !== strpos($msg, '{1}');
         $hasOrderId = $orderId ? false !== strpos($msg, '{2}') : false;
 
-        if ($hasFirstName || $hasLastName || $hasOrderId) { //this is a personalized message
+        if ($hasFirstName || $hasLastName || $hasOrderId) { // this is a personalized message
             if ($hasFirstName) {
                 $msg = str_replace('{0}', $data['firstname'], $msg);
             }
@@ -271,5 +238,40 @@ class Sms77 extends Module
         }
 
         return $msg;
+    }
+
+    public function uninstall()
+    {
+        foreach (array_keys($this->config) as $k) {
+            Configuration::deleteByName($k);
+        }
+
+        return parent::uninstall();
+    }
+
+    private function validateAndSend($msg, $number)
+    {
+        if (!Tools::strlen($number)) {
+            return null;
+        }
+
+        $apiKey = $this->getSetting('API_KEY');
+        if (!Tools::strlen($apiKey)) {
+            return null;
+        }
+
+        $signature = $this->getSetting('SIGNATURE');
+        if (Tools::strlen($signature)) {
+            if ('append' === $this->getSetting('SIGNATURE_POSITION')) {
+                $msg .= $signature;
+            } else {
+                $msg = $signature . $msg;
+            }
+        }
+
+        $api = new Client($apiKey, 'prestashop');
+        $api->sms($number, $msg, [
+            'from' => $this->getSetting('FROM')
+        ]);
     }
 }
