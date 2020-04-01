@@ -22,9 +22,28 @@ class Form extends HelperForm
         $this->allow_employee_form_lang = $defaultLang;
         $this->currentIndex = AdminController::$currentIndex . "&configure=$name";
         $this->default_form_language = $defaultLang;
-        foreach (Configuration::getMultiple(array_keys(Constants::$configuration)) as $k => $v) {
-            $this->fields_value["config[$k]"] = $v;
+
+        $setFieldsValue = function($k, $v) {
+            $name = "config[$k]";
+
+            if (is_array($v)) {
+                $name .= '[]';
+            }
+
+            $this->fields_value[$name] = $v;
+        };
+
+        foreach (Configuration::getMultiple(Constants::persistedKeys()) as $k => $v) {
+            $setFieldsValue($k, $v);
         }
+
+        foreach (Constants::NON_PERSISTED_KEYS as $k) {
+            $setFieldsValue($k, Constants::CONFIGURATION[$k]);
+        }
+
+        $toName = function($key) {
+            return "config[$key]";
+        };
 
         $this->fields_form = [
             [
@@ -40,7 +59,7 @@ class Form extends HelperForm
                         [
                             'tab' => 'settings',
                             'type' => 'text',
-                            'name' => 'config[SMS77_API_KEY]',
+                            'name' => $toName(Constants::API_KEY),
                             'label' => $this->l('API-Key'),
                             'hint' => $this->l('Your sms77.io API-Key.'),
                             'desc' => $this->l('An API-Key is needed for sending. Get yours now at sms77.io'),
@@ -70,7 +89,7 @@ class Form extends HelperForm
                         [
                             'tab' => 'settings',
                             'type' => 'text',
-                            'name' => 'config[SMS77_FROM]',
+                            'name' => $toName(Constants::FROM),
                             'label' => $this->l('From'),
                             'hint' => $this->l('Set a custom sender number or name.'),
                             'desc' => $this->l('Max 11 alphanumeric or 16 numeric characters.'),
@@ -99,7 +118,7 @@ class Form extends HelperForm
                         [
                             'tab' => 'settings',
                             'type' => 'radio',
-                            'name' => 'config[SMS77_SIGNATURE_POSITION]',
+                            'name' => $toName(Constants::SIGNATURE_POSITION),
                             'label' => $this->l('Signature position'),
                             'hint' => $this->l('Decides at which position the signature gets inserted.'),
                             'desc' => $this->l('Decides at which position the signature gets inserted.'),
@@ -109,15 +128,27 @@ class Form extends HelperForm
                                     'label' => $pos,
                                     'value' => $pos,
                                 ];
-                            }, Constants::$signature_positions),
+                            }, Constants::SIGNATURE_POSITIONS),
                         ],
                         [
                             'label' => $this->l('Countries'),
                             'multiple' => true,
-                            'name' => 'config[SMS77_BULK_COUNTRIES]',
+                            'name' => $toName(Constants::BULK_COUNTRIES),
                             'options' => [
                                 'query' => Country::getCountries($this->context->language->id),
                                 'id' => 'id_country',
+                                'name' => 'name'
+                            ],
+                            'tab' => 'bulk',
+                            'type' => 'select',
+                        ],
+                        [
+                            'label' => $this->l('Groups'),
+                            'multiple' => true,
+                            'name' => $toName(Constants::BULK_GROUPS),
+                            'options' => [
+                                'query' => Group::getGroups($this->context->language->id),
+                                'id' => 'id_group',
                                 'name' => 'name'
                             ],
                             'tab' => 'bulk',

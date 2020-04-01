@@ -13,11 +13,12 @@
  * @license   LICENSE
  */
 
-class Constants
+abstract class Constants
 {
     const API_KEY = 'SMS77_API_KEY';
     const BULK = 'SMS77_BULK';
     const BULK_COUNTRIES = 'SMS77_BULK_COUNTRIES';
+    const BULK_GROUPS = 'SMS77_BULK_GROUPS';
     const FROM = 'SMS77_FROM';
     const MSG_ON_DELIVERY = 'SMS77_MSG_ON_DELIVERY';
     const MSG_ON_INVOICE = 'SMS77_MSG_ON_INVOICE';
@@ -30,9 +31,23 @@ class Constants
     const SIGNATURE = 'SMS77_SIGNATURE';
     const SIGNATURE_POSITION = 'SMS77_SIGNATURE_POSITION';
 
-    public static $configuration = [
+    static function persistedKeys() {
+        $keys = [];
+
+        foreach (self::CONFIGURATION as $k => $v) {
+            if (!in_array($k, self::NON_PERSISTED_KEYS)) {
+                $keys[] = $k;
+            }
+        }
+
+        return $keys;
+    }
+
+    const CONFIGURATION = [
         self::API_KEY => '',
         self::BULK => '',
+        self::BULK_COUNTRIES => [],
+        self::BULK_GROUPS => [],
         self::FROM => '',
         self::MSG_ON_DELIVERY => false,
         self::MSG_ON_INVOICE => false,
@@ -49,5 +64,7 @@ class Constants
         self::SIGNATURE_POSITION => 'append',
     ];
 
-    public static $signature_positions = ['append', 'prepend',];
+    const SIGNATURE_POSITIONS = ['append', 'prepend',];
+
+    const NON_PERSISTED_KEYS = [Constants::BULK_COUNTRIES, Constants::BULK_GROUPS,];
 }

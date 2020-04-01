@@ -1,36 +1,36 @@
 {
-    "authors": [
-        {
-            "name": "André Matthies",
-            "email": "a.matthies@sms77.io",
-            "homepage": "http://www.sms77.io",
-            "role": "Developer"
-        }
-    ],
-    "config": {
-        "preferred-install": "dist",
-        "prepend-autoloader": false
-    },
-    "description": "Sms77.io API module for PrestaShop applications.",
-    "homepage": "https://github.com/sms77io/prestashop-module",
-    "keywords": [
-        "prestashop",
-        "sms"
-    ],
-    "license": "MIT",
-    "minimum-stability": "dev",
-    "name": "sms77/prestashop-module",
-    "prefer-stable": true,
-    "require": {
-        "php": ">=5.6.0",
-        "sms77/api": "1.0.0",
-        "giggsey/libphonenumber-for-php": "8.11.4"
-    },
-    "support": {
-        "email": "support@sms77.io",
-        "rss": "https://www.sms77.io/de/feed/",
-        "source": "https://github.com/sms77io/prestashop-module",
-        "docs": "https://github.com/sms77io/prestashop-module"
-    },
-    "type": "prestashop-module"
+  "authors": [
+    {
+      "name": "André Matthies",
+      "email": "a.matthies@sms77.io",
+      "homepage": "http://www.sms77.io",
+      "role": "Developer"
+    }
+  ],
+  "config": {
+    "preferred-install": "dist",
+    "prepend-autoloader": false
+  },
+  "description": "sms77io API module for PrestaShop 1.6+ applications.",
+  "homepage": "https://github.com/sms77io/prestashop-module",
+  "keywords": [
+    "prestashop",
+    "sms"
+  ],
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "name": "sms77/prestashop-module",
+  "prefer-stable": true,
+  "require": {
+    "php": ">=5.6.0",
+    "sms77/api": "1.1.0",
+    "giggsey/libphonenumber-for-php": "8.12.1"
+  },
+  "support": {
+    "email": "support@sms77.io",
+    "rss": "https://www.sms77.io/de/feed/",
+    "source": "https://github.com/sms77io/prestashop-module",
+    "docs": "https://github.com/sms77io/prestashop-module"
+  },
+  "type": "prestashop-module"
 }
