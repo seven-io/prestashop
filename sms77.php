@@ -13,10 +13,15 @@
  * @license   LICENSE
  */
 
+use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberUtil;
 
 require_once dirname(__FILE__) . "/Constants.php";
+require_once dirname(__FILE__) . "/Form.php";
 
+/**
+ * @property PhoneNumberUtil phoneNumberUtil
+ */
 class Sms77 extends Module
 {
     protected $config;
@@ -24,30 +29,24 @@ class Sms77 extends Module
     public function __construct()
     {
         $this->config = Constants::$configuration;
-
         $this->name = 'sms77';
         $this->version = '1.4.0';
         $this->author = 'sms77 e.K.';
         $this->need_instance = 0;
         $this->module_key = '7c33461cc60fc57e9746c6d288b6487e';
-
         parent::__construct();
 
         $this->__moduleDir = dirname(__FILE__);
         $this->bootstrap = true;
         $this->displayName = 'sms77';
-
         $this->description =
             $this->l('sms77.io module to programmatically send text messages.');
-
         $this->tab = 'advertising_marketing';
         $this->ps_versions_compliancy = [
             'min' => '1.6',
             'max' => _PS_VERSION_,
         ];
-
         $this->config['SMS77_FROM'] = Configuration::get('PS_SHOP_NAME'); // defaults to the shop name
-
         $this->phoneNumberUtil = PhoneNumberUtil::getInstance();
     }
 
@@ -64,26 +63,31 @@ class Sms77 extends Module
     {
         $output = null;
 
+        $missingApiKey = function() use($output) {
+            return $this->displayError(
+                $this->l('An API key is required in order to send SMS. Get yours at http://sms77.io.')
+            );
+        };
+
         if (Tools::isSubmit('submit' . $this->name)) {
-            foreach (Tools::getValue('config') as $k => $v) {
+            $config = Tools::getValue('config');
+
+            foreach ($config as $k => $v) {
                 if ('SMS77_API_KEY' === $k && 0 === Tools::strlen($v)) {
-                    $output .=
-                        $this->displayError(
-                            $this->l('An API key is required in order to send SMS. Get yours at http://sms77.io.')
-                        );
+                    $output .= $missingApiKey(); //TODO add back
                 }
 
                 if ('SMS77_BULK' === $k && Tools::strlen($v)) {
                     if (0 === Tools::strlen($this->getSetting('API_KEY'))) {
-                        $output .= $this->displayError(
-                            $this->l('An API key is required in order to send SMS. Get yours at http://sms77.io.')
-                        );
+                        $output .= $missingApiKey();
                     } else {
+                        $where = "q.active = 1 AND q.deleted = 0 AND q.id_customer != 0 AND q.phone_mobile<>'0000000000'";
+                        if (isset($config['SMS77_BULK_COUNTRIES'])) {
+                            $countries = implode(',', $config['SMS77_BULK_COUNTRIES']);
+                            $where .= " AND q.id_country IN ($countries)";
+                        }
                         $addresses = self::dbQuery(
-                            'id_country, id_customer, phone, phone_mobile',
-                            'address',
-                            "q.active = 1 AND q.deleted = 0 AND q.id_customer != 0 AND q.phone_mobile<>'0000000000'"
-                        );
+                            'id_country, id_customer, phone, phone_mobile','address', $where);
 
                         $merged = array_map(static function ($address) {
                             $customer = self::dbQuery(
@@ -94,9 +98,7 @@ class Sms77 extends Module
                             return $address + array_shift($customer);
                         }, $addresses);
 
-                        $phoneNumberUtil = $this->phoneNumberUtil;
-
-                        $valids = array_filter($merged, function ($d) use ($phoneNumberUtil) {
+                        $valids = array_filter($merged, function ($d) {
                             $numbers = [];
                             if (isset($d['phone'])) {
                                 $numbers[] = $d['phone'];
@@ -105,7 +107,7 @@ class Sms77 extends Module
                                 $numbers[] = $d['phone_mobile'];
                             }
 
-                            $numbers = array_filter($numbers, function ($number) use ($d, $phoneNumberUtil) {
+                            $numbers = array_filter($numbers, function ($number) use ($d) {
                                 try {
                                     $isoCode = self::dbQuery(
                                         'iso_code',
@@ -113,8 +115,8 @@ class Sms77 extends Module
                                         'q.id_country = ' . $d['id_country']
                                     );
                                     $isoCode = array_shift($isoCode)['iso_code'];
-                                    $numberProto = $phoneNumberUtil->parse($number, $isoCode);
-                                    return $phoneNumberUtil->isValidNumber($numberProto);
+                                    $numberProto = $this->phoneNumberUtil->parse($number, $isoCode);
+                                    return $this->phoneNumberUtil->isValidNumber($numberProto);
                                 } catch (NumberParseException $e) {
                                     return false;
                                 }
@@ -141,7 +143,7 @@ class Sms77 extends Module
                             $this->validateAndSend($k, implode(',', array_unique($phoneNumbers)));
                         }
                     }
-                } else {
+                } elseif (!in_array($k, [Constants::BULK_COUNTRIES])) {
                     Configuration::updateValue($k, $v);
                 }
             }

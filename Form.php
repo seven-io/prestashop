@@ -18,21 +18,13 @@ class Form extends HelperForm
     public function __construct($name)
     {
         parent::__construct();
-
         $defaultLang = (int)Configuration::get('PS_LANG_DEFAULT');
         $this->allow_employee_form_lang = $defaultLang;
         $this->currentIndex = AdminController::$currentIndex . "&configure=$name";
         $this->default_form_language = $defaultLang;
-
-        $configuration = Configuration::getMultiple(array_keys(Constants::$configuration));
-
-        foreach ($configuration as $k => $v) {
-            $configuration["config[$k]"] = $v;
-
-            unset($configuration[$k]);
+        foreach (Configuration::getMultiple(array_keys(Constants::$configuration)) as $k => $v) {
+            $this->fields_value["config[$k]"] = $v;
         }
-
-        $this->fields_value = $configuration;
 
         $this->fields_form = [
             [
@@ -119,6 +111,18 @@ class Form extends HelperForm
                                 ];
                             }, Constants::$signature_positions),
                         ],
+                        [
+                            'label' => $this->l('Countries'),
+                            'multiple' => true,
+                            'name' => 'config[SMS77_BULK_COUNTRIES]',
+                            'options' => [
+                                'query' => Country::getCountries($this->context->language->id),
+                                'id' => 'id_country',
+                                'name' => 'name'
+                            ],
+                            'tab' => 'bulk',
+                            'type' => 'select',
+                        ],
                         $this->makeTextarea(
                             'BULK',
                             'Send out any message to all of your customers.',
@@ -137,12 +141,9 @@ class Form extends HelperForm
         $this->name = $name;
         $this->name_controller = $name;
         $this->title = $name;
-
         $this->token = Tools::getAdminTokenLite('AdminModules');
-
         $this->show_toolbar = true;
         $this->submit_action = "submit$name";
-
         $this->toolbar_btn = [
             'save' =>
                 [
@@ -155,7 +156,6 @@ class Form extends HelperForm
                 'desc' => $this->l('Back to list'),
             ],
         ];
-
         $this->toolbar_scroll = true;
     }
 
