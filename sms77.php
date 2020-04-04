@@ -19,6 +19,7 @@ require_once dirname(__FILE__) . "/Constants.php";
 require_once dirname(__FILE__) . "/Form.php";
 require_once dirname(__FILE__) . "/Personalizer.php";
 require_once dirname(__FILE__) . "/Util.php";
+require_once dirname(__FILE__) . "/TableWrapper.php";
 
 /**
  * @property PhoneNumberUtil phoneNumberUtil
@@ -105,6 +106,8 @@ class Sms77 extends Module
 
     public function install()
     {
+        TableWrapper::create();
+
         if (Shop::isFeatureActive()) {
             Shop::setContext(Shop::CONTEXT_ALL);
         }
@@ -121,6 +124,8 @@ class Sms77 extends Module
 
     public function uninstall()
     {
+        TableWrapper::drop();
+
         foreach (array_keys($this->config) as $k) {
             Configuration::deleteByName($k);
         }

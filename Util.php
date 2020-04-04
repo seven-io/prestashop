@@ -63,9 +63,12 @@ class Util {
             }
         }
 
-        (new Client($apiKey, 'prestashop'))->sms($number, $msg, [
+        $res = (new Client($apiKey, 'prestashop'))->sms($number, $msg, [
             'from' => Configuration::get(Constants::FROM),
+            'json' => true,
         ]);
+
+        TableWrapper::insert(['response' => json_decode($res)]);
     }
 
     static function addWhereIfSet($where, $key, $field, $config) {
