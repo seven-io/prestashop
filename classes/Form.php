@@ -13,17 +13,19 @@
  * @license   LICENSE
  */
 
+require_once __DIR__ . "/../controllers/admin/Sms77AdminController.php";
+require_once __DIR__ . "./Constants.php";
+
 class Form extends HelperForm
 {
-    public function __construct($name)
-    {
+    public function __construct($name) {
         parent::__construct();
         $defaultLang = (int)Configuration::get('PS_LANG_DEFAULT');
         $this->allow_employee_form_lang = $defaultLang;
-        $this->currentIndex = AdminController::$currentIndex . "&configure=$name";
+        $this->currentIndex = Sms77AdminController::$currentIndex . "&configure=$name";
         $this->default_form_language = $defaultLang;
 
-        $setFieldsValue = function($k, $v) {
+        $setFieldsValue = function ($k, $v) {
             $name = "config[$k]";
 
             if (is_array($v)) {
@@ -33,15 +35,11 @@ class Form extends HelperForm
             $this->fields_value[$name] = $v;
         };
 
-        foreach (Configuration::getMultiple(Constants::persistedKeys()) as $k => $v) {
+        foreach (Configuration::getMultiple(array_keys(Constants::CONFIGURATION)) as $k => $v) {
             $setFieldsValue($k, $v);
         }
 
-        foreach (Constants::NON_PERSISTED_KEYS as $k) {
-            $setFieldsValue($k, Constants::CONFIGURATION[$k]);
-        }
-
-        $toName = function($key) {
+        $toName = function ($key) {
             return "config[$key]";
         };
 
@@ -130,35 +128,6 @@ class Form extends HelperForm
                                 ];
                             }, Constants::SIGNATURE_POSITIONS),
                         ],
-                        [
-                            'label' => $this->l('Countries'),
-                            'multiple' => true,
-                            'name' => $toName(Constants::BULK_COUNTRIES),
-                            'options' => [
-                                'query' => Country::getCountries($this->context->language->id),
-                                'id' => 'id_country',
-                                'name' => 'name'
-                            ],
-                            'tab' => 'bulk',
-                            'type' => 'select',
-                        ],
-                        [
-                            'label' => $this->l('Groups'),
-                            'multiple' => true,
-                            'name' => $toName(Constants::BULK_GROUPS),
-                            'options' => [
-                                'query' => Group::getGroups($this->context->language->id),
-                                'id' => 'id_group',
-                                'name' => 'name'
-                            ],
-                            'tab' => 'bulk',
-                            'type' => 'select',
-                        ],
-                        $this->makeTextarea(
-                            'BULK',
-                            'Send out any message to all of your customers.',
-                            'bulk'
-                        ),
                     ],
                     'submit' => [
                         'title' => $this->l('Save'),
@@ -179,19 +148,18 @@ class Form extends HelperForm
             'save' =>
                 [
                     'desc' => $this->l('Save'),
-                    'href' => AdminController::$currentIndex . "&configure=$name&save$name&token="
+                    'href' => Sms77AdminController::$currentIndex . "&configure=$name&save$name&token="
                         . Tools::getAdminTokenLite('AdminModules'),
                 ],
             'back' => [
-                'href' => AdminController::$currentIndex . '&token=' . Tools::getAdminTokenLite('AdminModules'),
+                'href' => Sms77AdminController::$currentIndex . '&token=' . Tools::getAdminTokenLite('AdminModules'),
                 'desc' => $this->l('Back to list'),
             ],
         ];
         $this->toolbar_scroll = true;
     }
 
-    private function makeTextarea($action, $trans, $tab = 'settings')
-    {
+    private function makeTextarea($action, $trans, $tab = 'settings') {
         $trans = $this->l($trans);
 
         return [
@@ -204,8 +172,7 @@ class Form extends HelperForm
         ];
     }
 
-    private function makeSwitch($action, $label, $desc, $values, $isBool)
-    {
+    private function makeSwitch($action, $label, $desc, $values, $isBool) {
         $descHit = $this->l($desc);
 
         return [
@@ -220,18 +187,17 @@ class Form extends HelperForm
         ];
     }
 
-    private function makeBool($action, $label, $desc)
-    {
+    private function makeBool($action, $label, $desc) {
         $sAction = Tools::strtolower($action);
 
         return $this->makeSwitch("MSG_ON_$action", $label, $desc, [
             [
                 'id' => 'on_' . $sAction . '_on',
-                'value' => 1
+                'value' => 1,
             ],
             [
                 'id' => 'on_' . $sAction . '_off',
-                'value' => 0
+                'value' => 0,
             ],
         ], true);
     }

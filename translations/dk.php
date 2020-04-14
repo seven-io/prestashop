@@ -1,7 +1,7 @@
 <?php
 
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{sms77_api}prestashop>sms77_api_1b0af35d7c6f2691a6442d5f9b4c2127'] =
     'sms77.io module til programmatisk forsendelse af SMS.';
 $_MODULE['<{sms77_api}prestashop>sms77_api_c888438d14855d7d96a2724ee9c306bd'] =

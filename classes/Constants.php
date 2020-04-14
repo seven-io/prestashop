@@ -31,23 +31,9 @@ abstract class Constants
     const SIGNATURE = 'SMS77_SIGNATURE';
     const SIGNATURE_POSITION = 'SMS77_SIGNATURE_POSITION';
 
-    static function persistedKeys() {
-        $keys = [];
-
-        foreach (self::CONFIGURATION as $k => $v) {
-            if (!in_array($k, self::NON_PERSISTED_KEYS)) {
-                $keys[] = $k;
-            }
-        }
-
-        return $keys;
-    }
-
     const CONFIGURATION = [
         self::API_KEY => '',
         self::BULK => '',
-        self::BULK_COUNTRIES => [],
-        self::BULK_GROUPS => [],
         self::FROM => '',
         self::MSG_ON_DELIVERY => false,
         self::MSG_ON_INVOICE => false,
@@ -65,6 +51,4 @@ abstract class Constants
     ];
 
     const SIGNATURE_POSITIONS = ['append', 'prepend',];
-
-    const NON_PERSISTED_KEYS = [Constants::BULK_COUNTRIES, Constants::BULK_GROUPS,];
 }

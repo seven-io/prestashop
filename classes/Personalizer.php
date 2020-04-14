@@ -19,12 +19,10 @@
  * @property bool $hasFirstName
  * @property bool $hasLastName
  * @property bool $hasOrderId
- *
  */
 class Personalizer
 {
-    public function __construct($msg, $address)
-    {
+    public function __construct($msg, $address) {
         $this->msg = $msg;
         $this->address = $address;
 
@@ -33,8 +31,7 @@ class Personalizer
         $this->hasOrderId = false !== strpos($this->msg, '{2}');
     }
 
-    function toString($orderId = null)
-    {
+    function toString($orderId = null) {
         $msg = $this->msg;
 
         if ($this->hasFirstName) {

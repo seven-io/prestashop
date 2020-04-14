@@ -24,6 +24,5 @@ Available message placeholders:
 
 #### TODO:
 - Add tests
-- Add more translations
 - Add more events
 - Add more placeholders to message contents
