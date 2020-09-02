@@ -15,8 +15,8 @@
 
 use Sms77\Api\Client;
 
-require_once(__DIR__ . '/TableWrapper.php');
-require_once(__DIR__ . '/Constants.php');
+require_once __DIR__ . '/TableWrapper.php';
+require_once __DIR__ . '/Constants.php';
 
 class Util
 {
