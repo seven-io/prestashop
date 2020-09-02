@@ -46,7 +46,7 @@ class TableWrapper
                 ' . self::TIMESTAMP . ' DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 ' . self::RESPONSE . ' TEXT NOT NULL,
                 ' . self::TYPE . ' VARCHAR(12) NOT NULL,
-                ' . self::GROUPS . ' VARCHAR(255),
+                `' . self::GROUPS . '` VARCHAR(255),
                 ' . self::COUNTRIES . ' VARCHAR(255),
                 PRIMARY KEY (id_sms77_message)
             ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;

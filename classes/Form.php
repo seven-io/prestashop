@@ -14,7 +14,7 @@
  */
 
 require_once __DIR__ . "/../controllers/admin/Sms77AdminController.php";
-require_once __DIR__ . "./Constants.php";
+require_once __DIR__ . "/Constants.php";
 
 class Form extends HelperForm
 {

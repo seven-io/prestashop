@@ -1,3 +1,4 @@
+![Sms77.io Logo](https://www.sms77.io/wp-content/uploads/2019/07/sms77-Logo-400x79.png "sms77")
 # sms77.io PrestaShop module
 
 ## Installation
@@ -22,7 +23,6 @@ Available message placeholders:
 - {1} => Last name
 - {2} => Order-ID (where available)
 
-#### TODO:
-- Add tests
-- Add more events
-- Add more placeholders to message contents
+#### Screenshots
+#### Screenshots
+![Screenshot of plugin settings](https://tettra-production.s3.us-west-2.amazonaws.com/0d6efb4f154041e899af17bdcd19c1b5/bcac36a50716f4f73cd84020c4bf091d/d822b155a4112474fdb7aea5ee22465e/cb30d8dd64d0e83fcc7822a40f1703d9/mLBF1Q0g4SCVCXQSEfzElQAJBvxDiaqqTTSqY2lS.png "PrestaShop.Sms77: Settings")

@@ -17,6 +17,10 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require_once __DIR__ . '/vendor/autoload.php';
+}
+
 require_once dirname(__FILE__) . "/classes/Constants.php";
 require_once dirname(__FILE__) . "/classes/Form.php";
 require_once dirname(__FILE__) . "/classes/Personalizer.php";
