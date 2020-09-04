@@ -13,8 +13,7 @@
  * @license   LICENSE
  */
 
-class TableWrapper
-{
+class TableWrapper {
     const BASE_NAME = 'sms77_message';
     const NAME = _DB_PREFIX_ . self::BASE_NAME;
     const ID = 'id_sms77_message';
@@ -23,54 +22,41 @@ class TableWrapper
     const TYPE = 'type';
     const GROUPS = 'groups';
     const COUNTRIES = 'countries';
+    const CONFIG = 'config';
     const _ACTIVE_AND_NOT_DELETED = 'q.active = 1 AND q.deleted = 0';
-
-    static function addWhereIfSet($where, $field, $array) {
-        if (count($array)) {
-            $list = implode(',', $array);
-
-            $where .= " AND $field IN ($list)";
-        }
-
-        return $where;
-    }
-
-    static function addWhereActiveAndNotDeletedIfSet($where, $field, $array) {
-        return self::addWhereIfSet(self::_ACTIVE_AND_NOT_DELETED . " $where", $field, $array);
-    }
 
     static function create() {
         self::execute('
             CREATE TABLE IF NOT EXISTS ' . self::NAME . ' (
-                ' . self::ID . ' INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-                ' . self::TIMESTAMP . ' DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                ' . self::RESPONSE . ' TEXT NOT NULL,
-                ' . self::TYPE . ' VARCHAR(12) NOT NULL,
+                `' . self::ID . '` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `' . self::TIMESTAMP . '` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `' . self::RESPONSE . '` TEXT NOT NULL,
+                `' . self::TYPE . '` VARCHAR(12) NOT NULL,
                 `' . self::GROUPS . '` VARCHAR(255),
-                ' . self::COUNTRIES . ' VARCHAR(255),
+                `' . self::COUNTRIES . '` VARCHAR(255),
+                `' . self::CONFIG . '` TEXT,
                 PRIMARY KEY (id_sms77_message)
             ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;
         ');
     }
 
-    static function dbQuery($select, $from, $where) {
-        $sql = new DbQuery();
-
-        $sql->select($select);
-        $sql->from($from, 'q');
-        $sql->where($where);
-
-        return Db::getInstance()->executeS($sql);
+    /**
+     * @param string $sql
+     * @return bool
+     */
+    static function execute($sql) {
+        return Db::getInstance()->execute($sql);
     }
 
     static function drop() {
         return self::execute('DROP TABLE ' . self::NAME);
     }
 
-    static function execute($sql) {
-        return Db::getInstance()->execute($sql);
-    }
-
+    /**
+     * @param string $fields
+     * @param string|null $where
+     * @return array|bool|object|null
+     */
     static function get($fields = '*', $where = null) {
         $sql = "SELECT $fields FROM " . self::NAME;
 
@@ -81,12 +67,23 @@ class TableWrapper
         return Db::getInstance()->getRow($sql);
     }
 
+    /**
+     * @param array $groups
+     * @param array $countries
+     * @return array
+     */
     static function getActiveCustomerAddressesByGroupsAndCountries($groups, $countries) {
-        return array_map(static function ($address) use ($groups) {
+        return array_map(static function($address) use ($groups) {
             return $address + TableWrapper::getActiveCustomerByGroups($address['id_customer'], $groups);
         }, TableWrapper::getActiveCustomerAddressesByCountries($countries));
     }
 
+    /**
+     * @param int $id_customer
+     * @param array $groups
+     * @return mixed
+     * @throws PrestaShopDatabaseException
+     */
     static function getActiveCustomerByGroups($id_customer, $groups) {
         $customer = self::dbQuery(
             '*',
@@ -97,6 +94,46 @@ class TableWrapper
         return array_shift($customer);
     }
 
+    /**
+     * @param string $select
+     * @param string $from
+     * @param string $where
+     * @return array|bool|mysqli_result|PDOStatement|resource|null
+     * @throws PrestaShopDatabaseException
+     */
+    static function dbQuery($select, $from, $where) {
+        $sql = new DbQuery();
+
+        $sql->select($select);
+        $sql->from($from, 'q');
+        $sql->where($where);
+
+        return Db::getInstance()->executeS($sql);
+    }
+
+    /**
+     * @param string $where
+     * @param string $field
+     * @param array $array
+     * @return string
+     */
+    static function addWhereActiveAndNotDeletedIfSet($where, $field, $array) {
+        $where = self::_ACTIVE_AND_NOT_DELETED . " $where";
+
+        if (count($array)) {
+            $list = implode(',', $array);
+
+            $where .= " AND $field IN ($list)";
+        }
+
+        return $where;
+    }
+
+    /**
+     * @param array $countries
+     * @return array|bool|mysqli_result|PDOStatement|resource|null
+     * @throws PrestaShopDatabaseException
+     */
     static function getActiveCustomerAddressesByCountries($countries) {
         return self::dbQuery(
             'id_country, id_customer, phone, phone_mobile',
@@ -107,6 +144,11 @@ class TableWrapper
                 $countries));
     }
 
+    /**
+     * @param array $data
+     * @return bool
+     * @throws PrestaShopDatabaseException
+     */
     static function insert($data = []) {
         $db = Db::getInstance();
 

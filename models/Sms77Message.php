@@ -13,11 +13,7 @@
  * @license   LICENSE
  */
 
-class Sms77Message extends ObjectModel
-{
-    /** @var string $response */
-    public $response;
-
+class Sms77Message extends ObjectModel {
     /**
      * @see ObjectModel::$definition
      */
@@ -31,4 +27,6 @@ class Sms77Message extends ObjectModel
         'primary' => 'id_sms77_message',
         'table' => 'sms77_message',
     ];
+    /** @var string $response */
+    public $response;
 }

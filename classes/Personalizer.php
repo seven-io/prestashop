@@ -13,39 +13,93 @@
  * @license   LICENSE
  */
 
-/**
- * @property string $msg
- * @property array $address
- * @property bool $hasFirstName
- * @property bool $hasLastName
- * @property bool $hasOrderId
- */
-class Personalizer
-{
-    public function __construct($msg, $address) {
-        $this->msg = $msg;
-        $this->address = $address;
+class Personalizer {
+    /** @var string $msg */
+    private $msg;
+    /** @var string|string[] */
+    private $transformed;
+    /** @var array $placeholders */
+    private $placeholders = [];
+    /** @var boolean $hasPlaceholder */
+    private $hasPlaceholder = false;
+    /** @var boolean $hasAddress */
+    private $hasAddress = false;
 
-        $this->hasFirstName = false !== strpos($this->msg, '{0}');
-        $this->hasLastName = false !== strpos($this->msg, '{1}');
-        $this->hasOrderId = false !== strpos($this->msg, '{2}');
+    /**
+     * Personalizer constructor.
+     * @param string $msg
+     */
+    public function __construct($msg) {
+        $this->msg = $msg;
+        $this->transformed = $msg;
     }
 
-    function toString($orderId = null) {
-        $msg = $this->msg;
-
-        if ($this->hasFirstName) {
-            $msg = str_replace('{0}', $this->address['firstname'], $msg);
+    public function addPlaceholders($placeholders) {
+        foreach ($placeholders as $placeholder) {
+            $this->placeholders[] = $placeholder;
         }
 
-        if ($this->hasLastName) {
-            $msg = str_replace('{1}', $this->address['lastname'], $msg);
+        return $this;
+    }
+
+    public function addAddress($address) {
+        if (!$this->hasAddress) {
+            $placeholders = [$address['firstname'], $address['lastname']];
+
+            foreach ($this->placeholders as $placeholder) {
+                $placeholders[] = $placeholder;
+            }
+
+            $this->placeholders = $placeholders;
+
+            $this->hasAddress = true;
         }
 
-        if ($this->hasOrderId && $orderId) {
-            $msg = str_replace('{2}', $orderId, $msg);
+        return $this;
+    }
+
+    public function getPlaceholders() {
+        return $this->placeholders;
+    }
+
+    public function getHasPlaceholder() {
+        return $this->hasPlaceholder;
+    }
+
+    public function fillPlaceholders() {
+        $n = 0;
+
+        foreach ($this->placeholders as $placeholder => $replace) {
+            $this->replace($n, $replace);
+
+            $n++;
         }
 
-        return $msg;
+        return $this;
+    }
+
+    private function replace($search, $replace) {
+        $search = '{' . $search . '}';
+
+        if (false !== strpos($this->transformed, $search)) {
+            if (!$this->hasPlaceholder) {
+                $this->hasPlaceholder = true;
+            }
+
+            $this->transformed = str_replace($search, $replace, $this->transformed);
+        }
+
+        return $this;
+    }
+
+    public function getMsg() {
+        return $this->msg;
+    }
+
+    /**
+     * @return string|string[]
+     */
+    public function getTransformed() {
+        return $this->transformed;
     }
 }

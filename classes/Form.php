@@ -1,23 +1,16 @@
 <?php
 /**
  * NOTICE OF LICENSE
- *
  * This file is licenced under the Software License Agreement.
  * With the purchase or the installation of the software in your application
  * you accept the licence agreement.
- *
  * You must not modify, adapt or create derivative works of this source code
- *
  * @author    sms77.io
  * @copyright 2019-present sms77 e.K.
  * @license   LICENSE
  */
 
-require_once __DIR__ . "/../controllers/admin/Sms77AdminController.php";
-require_once __DIR__ . "/Constants.php";
-
-class Form extends HelperForm
-{
+class Form extends HelperForm {
     public function __construct($name) {
         parent::__construct();
         $defaultLang = (int)Configuration::get('PS_LANG_DEFAULT');
@@ -25,23 +18,16 @@ class Form extends HelperForm
         $this->currentIndex = Sms77AdminController::$currentIndex . "&configure=$name";
         $this->default_form_language = $defaultLang;
 
-        $setFieldsValue = function ($k, $v) {
-            $name = "config[$k]";
+        foreach (Configuration::getMultiple(array_keys(Constants::CONFIGURATION))
+                 as $k => $v) {
+            $optionName = "config[$k]";
 
             if (is_array($v)) {
-                $name .= '[]';
+                $optionName .= '[]';
             }
 
-            $this->fields_value[$name] = $v;
-        };
-
-        foreach (Configuration::getMultiple(array_keys(Constants::CONFIGURATION)) as $k => $v) {
-            $setFieldsValue($k, $v);
+            $this->fields_value[$optionName] = $v;
         }
-
-        $toName = function ($key) {
-            return "config[$key]";
-        };
 
         $this->fields_form = [
             [
@@ -57,7 +43,7 @@ class Form extends HelperForm
                         [
                             'tab' => 'settings',
                             'type' => 'text',
-                            'name' => $toName(Constants::API_KEY),
+                            'name' => FormUtil::toName(Constants::API_KEY),
                             'label' => $this->l('API-Key'),
                             'hint' => $this->l('Your sms77.io API-Key.'),
                             'desc' => $this->l('An API-Key is needed for sending. Get yours now at sms77.io'),
@@ -84,10 +70,15 @@ class Form extends HelperForm
                             'Text on delivery?',
                             'Send a text message after delivery?'
                         ),
+                        $this->makeBool(
+                            'REFUND',
+                            'Text on refund?',
+                            'Send a text message after refund initiation?'
+                        ),
                         [
                             'tab' => 'settings',
                             'type' => 'text',
-                            'name' => $toName(Constants::FROM),
+                            'name' => FormUtil::toName(Constants::FROM),
                             'label' => $this->l('From'),
                             'hint' => $this->l('Set a custom sender number or name.'),
                             'desc' => $this->l('Max 11 alphanumeric or 16 numeric characters.'),
@@ -110,24 +101,17 @@ class Form extends HelperForm
                             'Sets the text message sent to the customer after delivery.'
                         ),
                         $this->makeTextarea(
+                            'ON_REFUND',
+                            'Sets the text message sent to the customer after refund.'
+                        ),
+                        $this->makeTextarea(
                             'SIGNATURE',
                             'Sets a signature to add to all messages.'
                         ),
-                        [
-                            'tab' => 'settings',
-                            'type' => 'radio',
-                            'name' => $toName(Constants::SIGNATURE_POSITION),
-                            'label' => $this->l('Signature position'),
-                            'hint' => $this->l('Decides at which position the signature gets inserted.'),
-                            'desc' => $this->l('Decides at which position the signature gets inserted.'),
-                            'values' => array_map(function ($pos) {
-                                return [
-                                    'id' => "sms77_config_signature_position_$pos",
-                                    'label' => $pos,
-                                    'value' => $pos,
-                                ];
-                            }, Constants::SIGNATURE_POSITIONS),
-                        ],
+                        FormUtil::signaturePosition(
+                            $this->l('Signature position'),
+                            $this->l('Decides at which position the signature gets inserted.'),
+                            'settings', true),
                     ],
                     'submit' => [
                         'title' => $this->l('Save'),
@@ -148,57 +132,37 @@ class Form extends HelperForm
             'save' =>
                 [
                     'desc' => $this->l('Save'),
-                    'href' => Sms77AdminController::$currentIndex . "&configure=$name&save$name&token="
+                    'href' => Sms77AdminController::$currentIndex
+                        . "&configure=$name&save$name&token="
                         . Tools::getAdminTokenLite('AdminModules'),
                 ],
             'back' => [
-                'href' => Sms77AdminController::$currentIndex . '&token=' . Tools::getAdminTokenLite('AdminModules'),
+                'href' => Sms77AdminController::$currentIndex
+                    . '&token=' . Tools::getAdminTokenLite('AdminModules'),
                 'desc' => $this->l('Back to list'),
             ],
         ];
         $this->toolbar_scroll = true;
     }
 
-    private function makeTextarea($action, $trans, $tab = 'settings') {
-        $trans = $this->l($trans);
-
-        return [
-            'tab' => $tab,
-            'type' => 'textarea',
-            'name' => "config[SMS77_$action]",
-            'label' => $trans,
-            'hint' => $trans,
-            'desc' => $trans,
-        ];
-    }
-
-    private function makeSwitch($action, $label, $desc, $values, $isBool) {
-        $descHit = $this->l($desc);
-
-        return [
-            'tab' => 'settings',
-            'type' => 'switch',
-            'name' => "config[SMS77_$action]",
-            'label' => $this->l($label),
-            'desc' => $descHit,
-            'hint' => $descHit,
-            'is_bool' => $isBool,
-            'values' => $values,
-        ];
-    }
-
+    /**
+     * @param string $action
+     * @param string $label
+     * @param string $desc
+     * @return array
+     */
     private function makeBool($action, $label, $desc) {
-        $sAction = Tools::strtolower($action);
+        return FormUtil::makeSwitch("config[SMS77_MSG_ON_$action]",
+            $label, Tools::strtolower($action), true, 'settings', $desc);
+    }
 
-        return $this->makeSwitch("MSG_ON_$action", $label, $desc, [
-            [
-                'id' => 'on_' . $sAction . '_on',
-                'value' => 1,
-            ],
-            [
-                'id' => 'on_' . $sAction . '_off',
-                'value' => 0,
-            ],
-        ], true);
+    /**
+     * @param string $action
+     * @param string $trans
+     * @return array
+     */
+    private function makeTextarea($action, $trans) {
+        return FormUtil::makeTextarea(
+            "config[SMS77_$action]", $trans, 'settings');
     }
 }

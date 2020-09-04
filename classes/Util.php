@@ -13,70 +13,90 @@
  * @license   LICENSE
  */
 
-use Sms77\Api\Client;
+class Util {
+    /**
+     * @param string $class
+     * @param callable $cb
+     * @return array
+     * @throws ReflectionException
+     */
+    public static function parseFormByClass($class, $cb) {
+        $constants = (new ReflectionClass($class))->getConstants();
+        $array = array_flip($constants);
 
-require_once __DIR__ . '/TableWrapper.php';
-require_once __DIR__ . '/Constants.php';
-
-class Util
-{
-    private static function addSignature($msg) {
-        $signature = Configuration::get(Constants::SIGNATURE);
-
-        if (Tools::strlen($signature)) {
-            if ('append' === Configuration::get(Constants::SIGNATURE_POSITION)) {
-                $msg .= $signature;
-            } else {
-                $msg = $signature . $msg;
-            }
+        foreach (array_keys($array) as $key) {
+            $cb($array, $key);
         }
 
-        return $msg;
+        return $array;
     }
 
-    private static function toString($items) {
+    /**
+     * @param array $customer
+     * @return mixed
+     */
+    public static function getRecipient($customer) {
+        return '' === $customer['phone_mobile']
+            ? $customer['phone'] : $customer['phone_mobile'];
+    }
+
+    /**
+     * @param OrderState $orderState
+     * @return string|null
+     */
+    public static function getOrderStateAction(OrderState $orderState) {
+        $isRefunded = 7 === $orderState->id;
+        $awaitingPayment = in_array($orderState->id, [1, 10, 13], true);
+        $isShipping = 4 === $orderState->id;
+        $awaitingDelivery = 5 === $orderState->id;
+        $isPaid = in_array($orderState->id, [2, 11], true);
+
+        $action = null;
+
+        if ($awaitingPayment) {
+            $action = 'INVOICE';
+        } elseif ($isPaid) {
+            $action = 'PAYMENT';
+        } elseif ($isShipping) {
+            $action = 'SHIPMENT';
+        } elseif ($awaitingDelivery) {
+            $action = 'DELIVERY';
+        } elseif ($isRefunded) {
+            $action = 'REFUND';
+        }
+
+        return $action;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function hasApiKey() {
+        return (bool)Tools::strlen(Configuration::get(Constants::API_KEY));
+    }
+
+    /**
+     * @return string
+     * @throws PrestaShopException
+     */
+    public static function pluginConfigLink() {
+        return Context::getContext()->link->getAdminLink('sms77', true, [
+            'route' => 'admin_module_configure_action',
+            'module_name' => 'sms77']);
+    }
+
+    /**
+     * @param string $url
+     */
+    public static function redirect($url) {
+        die(header("Location: $url"));
+    }
+
+    /**
+     * @param array $items
+     * @return string
+     */
+    public static function stringifyUniqueList($items) {
         return implode(',', array_unique($items));
-    }
-
-    static function getRecipient($address) {
-        return '' === $address['phone'] ? $address['phone_mobile'] : $address['phone'];
-    }
-
-    static function insert($res, $type, $groups = [], $countries = []) {
-        if (!$res) {
-            return false;
-        }
-
-        $array = [TableWrapper::RESPONSE => json_encode($res), TableWrapper::TYPE => $type,];
-
-        if (count($groups)) {
-            $array[TableWrapper::GROUPS] = is_array($groups) ? self::toString($groups) : $groups;
-        }
-        if (count($countries)) {
-            $array[TableWrapper::COUNTRIES] = is_array($countries) ? self::toString($countries) : $countries;
-        }
-
-        return TableWrapper::insert($array);
-    }
-
-    static function validateAndSend($msg, $number) {
-        if (is_array($number)) {
-            $number = self::toString($number);
-        }
-
-        if (!Tools::strlen($number)) {
-            return null;
-        }
-
-        $apiKey = Configuration::get(Constants::API_KEY);
-
-        if (!Tools::strlen($apiKey)) {
-            return null;
-        }
-
-        return json_decode((new Client($apiKey, 'prestashop'))->sms($number, self::addSignature($msg), [
-            'from' => Configuration::get(Constants::FROM),
-            'json' => true,
-        ]), true);
     }
 }
