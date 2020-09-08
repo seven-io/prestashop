@@ -7,11 +7,19 @@
       "role": "Developer"
     }
   ],
+  "autoload": {
+    "classmap": [
+      "classes",
+      "controllers",
+      "sms77.php",
+      "models"
+    ]
+  },
   "config": {
     "preferred-install": "dist",
     "prepend-autoloader": false
   },
-  "description": "sms77io API module for PrestaShop 1.6+ applications.",
+  "description": "Sms77.io API module for PrestaShop 1.6+ applications.",
   "homepage": "https://github.com/sms77io/prestashop-module",
   "keywords": [
     "prestashop",
@@ -23,8 +31,9 @@
   "prefer-stable": true,
   "require": {
     "php": ">=5.6.0",
-    "sms77/api": "1.1.0",
-    "ext-json": "*"
+    "sms77/api": "dev-master",
+    "ext-json": "*",
+    "ext-pdo": "*"
   },
   "support": {
     "email": "support@sms77.io",
