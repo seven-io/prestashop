@@ -13,14 +13,16 @@
  * @license   LICENSE
  */
 
-class Util {
+class Util
+{
     /**
      * @param string $class
      * @param callable $cb
      * @return array
      * @throws ReflectionException
      */
-    public static function parseFormByClass($class, $cb) {
+    public static function parseFormByClass($class, $cb)
+    {
         $constants = (new ReflectionClass($class))->getConstants();
         $array = array_flip($constants);
 
@@ -35,7 +37,8 @@ class Util {
      * @param array $customer
      * @return mixed
      */
-    public static function getRecipient($customer) {
+    public static function getRecipient($customer)
+    {
         return '' === $customer['phone_mobile']
             ? $customer['phone'] : $customer['phone_mobile'];
     }
@@ -44,7 +47,8 @@ class Util {
      * @param OrderState $orderState
      * @return string|null
      */
-    public static function getOrderStateAction(OrderState $orderState) {
+    public static function getOrderStateAction(OrderState $orderState)
+    {
         $isRefunded = 7 === $orderState->id;
         $awaitingPayment = in_array($orderState->id, [1, 10, 13], true);
         $isShipping = 4 === $orderState->id;
@@ -71,7 +75,8 @@ class Util {
     /**
      * @return bool
      */
-    public static function hasApiKey() {
+    public static function hasApiKey()
+    {
         return (bool)Tools::strlen(Configuration::get(Constants::API_KEY));
     }
 
@@ -79,24 +84,19 @@ class Util {
      * @return string
      * @throws PrestaShopException
      */
-    public static function pluginConfigLink() {
+    public static function pluginConfigLink()
+    {
         return Context::getContext()->link->getAdminLink('sms77', true, [
             'route' => 'admin_module_configure_action',
             'module_name' => 'sms77']);
     }
 
     /**
-     * @param string $url
-     */
-    public static function redirect($url) {
-        die(header("Location: $url"));
-    }
-
-    /**
      * @param array $items
      * @return string
      */
-    public static function stringifyUniqueList($items) {
+    public static function stringifyUniqueList($items)
+    {
         return implode(',', array_unique($items));
     }
 }

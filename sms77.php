@@ -17,17 +17,19 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-if (file_exists(__DIR__ . '/vendor/autoload.php')) {
-    require_once __DIR__ . '/vendor/autoload.php';
+if (file_exists(dirname(__FILE__) . '/vendor/autoload.php')) {
+    require_once dirname(__FILE__) . '/vendor/autoload.php';
 }
 
-class sms77 extends Module {
+class Sms77 extends Module
+{
     protected $config;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->config = Constants::CONFIGURATION;
         $this->name = 'sms77';
-        $this->version = '1.7.0';
+        $this->version = '1.7.1';
         $this->author = 'sms77 e.K.';
         $this->need_instance = 0;
         $this->module_key = '597145e6fdfc3580abe1afc34f7f3971';
@@ -50,7 +52,8 @@ class sms77 extends Module {
      * @return string
      * @throws PrestaShopException
      */
-    public function getContent() {
+    public function getContent()
+    {
         $output = null;
 
         if (Tools::isSubmit("submit$this->name")) {
@@ -74,7 +77,8 @@ class sms77 extends Module {
      * @param array $data
      * @throws PrestaShopDatabaseException
      */
-    public function hookActionOrderStatusPostUpdate(array $data) {
+    public function hookActionOrderStatusPostUpdate(array $data)
+    {
         $order = isset($data['Order']) ? $data['Order'] : $data['cart'];
 
         $address = (array)new Address((int)(Tools::strlen($order->id_address_delivery)
@@ -89,7 +93,7 @@ class sms77 extends Module {
                 'text' => Util::getRecipient($address),
             ]);
 
-            SmsUtil::insert($res, strtolower("on_$action"), []);
+            SmsUtil::insert($res, Tools::strtolower("on_$action"), []);
         }
     }
 
@@ -97,11 +101,12 @@ class sms77 extends Module {
      * @return bool
      * @throws PrestaShopException
      */
-    public function install() {
+    public function install()
+    {
         TableWrapper::create();
 
         $tab = new Tab();
-        $tab->name[$this->context->language->id] = $this->l('sms77io Bulk SMS'); // Need a foreach for the language TODO???
+        $tab->name[$this->context->language->id] = $this->l('sms77io Bulk SMS');
         $tab->class_name = 'Sms77Admin';
         $tab->id_parent = Tab::getIdFromClassName('AdminParentCustomerThreads');
         $tab->module = $this->name;
@@ -122,7 +127,8 @@ class sms77 extends Module {
     /**
      * @return bool
      */
-    public function uninstall() {
+    public function uninstall()
+    {
         TableWrapper::drop();
 
         foreach (Tab::getCollectionFromModule($this->name) as $moduleTab) {

@@ -13,7 +13,8 @@
  * @license   LICENSE
  */
 
-abstract class Constants {
+abstract class Constants
+{
     const API_KEY = 'SMS77_API_KEY';
     const BULK = 'SMS77_BULK';
     const BULK_COUNTRIES = 'SMS77_BULK_COUNTRIES';

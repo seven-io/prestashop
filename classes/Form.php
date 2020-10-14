@@ -10,16 +10,17 @@
  * @license   LICENSE
  */
 
-class Form extends HelperForm {
-    public function __construct($name) {
+class Form extends HelperForm
+{
+    public function __construct($name)
+    {
         parent::__construct();
         $defaultLang = (int)Configuration::get('PS_LANG_DEFAULT');
         $this->allow_employee_form_lang = $defaultLang;
         $this->currentIndex = Sms77AdminController::$currentIndex . "&configure=$name";
         $this->default_form_language = $defaultLang;
 
-        foreach (Configuration::getMultiple(array_keys(Constants::CONFIGURATION))
-                 as $k => $v) {
+        foreach (Configuration::getMultiple(array_keys(Constants::CONFIGURATION)) as $k => $v) {
             $optionName = "config[$k]";
 
             if (is_array($v)) {
@@ -111,7 +112,9 @@ class Form extends HelperForm {
                         FormUtil::signaturePosition(
                             $this->l('Signature position'),
                             $this->l('Decides at which position the signature gets inserted.'),
-                            'settings', true),
+                            'settings',
+                            true
+                        ),
                     ],
                     'submit' => [
                         'title' => $this->l('Save'),
@@ -151,9 +154,16 @@ class Form extends HelperForm {
      * @param string $desc
      * @return array
      */
-    private function makeBool($action, $label, $desc) {
-        return FormUtil::makeSwitch("config[SMS77_MSG_ON_$action]",
-            $label, Tools::strtolower($action), true, 'settings', $desc);
+    private function makeBool($action, $label, $desc)
+    {
+        return FormUtil::makeSwitch(
+            "config[SMS77_MSG_ON_$action]",
+            $label,
+            Tools::strtolower($action),
+            true,
+            'settings',
+            $desc
+        );
     }
 
     /**
@@ -161,8 +171,12 @@ class Form extends HelperForm {
      * @param string $trans
      * @return array
      */
-    private function makeTextarea($action, $trans) {
+    private function makeTextarea($action, $trans)
+    {
         return FormUtil::makeTextarea(
-            "config[SMS77_$action]", $trans, 'settings');
+            "config[SMS77_$action]",
+            $trans,
+            'settings'
+        );
     }
 }

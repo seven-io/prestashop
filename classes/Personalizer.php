@@ -13,7 +13,8 @@
  * @license   LICENSE
  */
 
-class Personalizer {
+class Personalizer
+{
     /** @var string $msg */
     private $msg;
     /** @var string|string[] */
@@ -29,12 +30,18 @@ class Personalizer {
      * Personalizer constructor.
      * @param string $msg
      */
-    public function __construct($msg) {
+    public function __construct($msg)
+    {
         $this->msg = $msg;
         $this->transformed = $msg;
     }
 
-    public function addPlaceholders($placeholders) {
+    /**
+     * @param array $placeholders
+     * @return $this
+     */
+    public function addPlaceholders($placeholders)
+    {
         foreach ($placeholders as $placeholder) {
             $this->placeholders[] = $placeholder;
         }
@@ -42,7 +49,12 @@ class Personalizer {
         return $this;
     }
 
-    public function addAddress($address) {
+    /**
+     * @param array $address
+     * @return $this
+     */
+    public function addAddress($address)
+    {
         if (!$this->hasAddress) {
             $placeholders = [$address['firstname'], $address['lastname']];
 
@@ -58,15 +70,21 @@ class Personalizer {
         return $this;
     }
 
-    public function getPlaceholders() {
+    /** @return array */
+    public function getPlaceholders()
+    {
         return $this->placeholders;
     }
 
-    public function getHasPlaceholder() {
+    /** @return bool */
+    public function getHasPlaceholder()
+    {
         return $this->hasPlaceholder;
     }
 
-    public function fillPlaceholders() {
+    /** @return $this */
+    public function fillPlaceholders()
+    {
         $n = 0;
 
         foreach ($this->placeholders as $placeholder => $replace) {
@@ -78,7 +96,13 @@ class Personalizer {
         return $this;
     }
 
-    private function replace($search, $replace) {
+    /**
+     * @param $search
+     * @param $replace
+     * @return $this
+     */
+    private function replace($search, $replace)
+    {
         $search = '{' . $search . '}';
 
         if (false !== strpos($this->transformed, $search)) {
@@ -92,14 +116,15 @@ class Personalizer {
         return $this;
     }
 
-    public function getMsg() {
+    /** @return string */
+    public function getMsg()
+    {
         return $this->msg;
     }
 
-    /**
-     * @return string|string[]
-     */
-    public function getTransformed() {
+    /** @return string|string[] */
+    public function getTransformed()
+    {
         return $this->transformed;
     }
 }

@@ -13,7 +13,8 @@
  * @license   LICENSE
  */
 
-class Sms77Message extends ObjectModel {
+class Sms77Message extends ObjectModel
+{
     /**
      * @see ObjectModel::$definition
      */

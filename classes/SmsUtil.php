@@ -16,15 +16,18 @@
 use Sms77\Api\Client;
 use Sms77\Api\SmsOptions;
 
-class SmsUtil {
+class SmsUtil
+{
     /**
      * @return array|mixed|null
      * @throws PrestaShopDatabaseException|ReflectionException
      */
-    public static function sendBulk() {
+    public static function sendBulk()
+    {
         $form = Tools::getAllValues();
-        $cfg = Util::parseFormByClass(SmsOptions::class,
-            static function(&$smsConfig, $k) use ($form) {
+        $cfg = Util::parseFormByClass(
+            SmsOptions::class,
+            static function (&$smsConfig, $k) use ($form) {
                 $optionValue = isset($form[$k]) ? $form[$k] : false;
 
                 if (false === $optionValue) {
@@ -36,12 +39,15 @@ class SmsUtil {
 
                     $smsConfig[$k] = $optionValue;
                 }
-            });
+            }
+        );
         $countries = Tools::getValue(Constants::BULK_COUNTRIES, []);
         $groups = Tools::getValue(Constants::BULK_GROUPS, []);
         $ignoreSignature = (boolean)$form['ignore_signature'];
         $activeCustomers = TableWrapper::getActiveCustomerAddressesByGroupsAndCountries(
-            $groups, $countries);
+            $groups,
+            $countries
+        );
 
         if ((new Personalizer($cfg[SmsOptions::Text]))->fillPlaceholders()->getHasPlaceholder()) {
             $res = [];
@@ -58,7 +64,7 @@ class SmsUtil {
                 ? $res : null;
         }
 
-        $phoneNumbers = array_map(static function($d) {
+        $phoneNumbers = array_map(static function ($d) {
             return Util::getRecipient($d);
         }, $activeCustomers);
 
@@ -81,7 +87,8 @@ class SmsUtil {
      * @param boolean $ignoreSignature
      * @return mixed|null
      */
-    public static function validateAndSend($cfg, $ignoreSignature = false) {
+    public static function validateAndSend($cfg, $ignoreSignature = false)
+    {
         $to = $cfg[SmsOptions::To];
         $text = $cfg[SmsOptions::Text];
 
@@ -100,7 +107,7 @@ class SmsUtil {
         }
 
         if (!$ignoreSignature) {
-            $text = self::addSignature($text, $cfg);
+            $text = self::addSignature($text);
         }
 
         if (!array_key_exists(SmsOptions::From, $cfg)) {
@@ -119,19 +126,23 @@ class SmsUtil {
 
     /**
      * @param string $msg
-     * @param array $cfg
      * @return string
      */
-    private static function addSignature($msg, $cfg) {
-        $signature = Tools::getValue(Constants::SIGNATURE,
-            Configuration::get(Constants::SIGNATURE));
+    private static function addSignature($msg)
+    {
+        $signature = Tools::getValue(
+            Constants::SIGNATURE,
+            Configuration::get(Constants::SIGNATURE)
+        );
 
         if (Tools::strlen($signature)) {
-            $signaturePosition = Tools::getValue(Constants::SIGNATURE_POSITION,
-                Configuration::get(Constants::SIGNATURE_POSITION));
+            $signaturePosition = Tools::getValue(
+                Constants::SIGNATURE_POSITION,
+                Configuration::get(Constants::SIGNATURE_POSITION)
+            );
 
             if ('append' === $signaturePosition) {
-                $msg = $msg . $signature;
+                $msg .= $signature;
             } else {
                 $msg = $signature . $msg;
             }
@@ -149,7 +160,8 @@ class SmsUtil {
      * @return bool
      * @throws PrestaShopDatabaseException
      */
-    public static function insert($res, $type, $cfg, $groups = [], $countries = []) {
+    public static function insert($res, $type, $cfg, $groups = [], $countries = [])
+    {
         if (!$res) {
             return false;
         }

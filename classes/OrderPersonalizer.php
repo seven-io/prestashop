@@ -13,14 +13,16 @@
  * @license   LICENSE
  */
 
-class OrderPersonalizer extends Personalizer {
+class OrderPersonalizer extends Personalizer
+{
     /**
      * OrderPersonalizer constructor.
      * @param string $action
      * @param array $address
      * @param int $orderId
      */
-    public function __construct($action, $address, $orderId) {
+    public function __construct($action, $address, $orderId)
+    {
         parent::__construct(Configuration::get("SMS77_ON_$action"));
 
         $this->addAddress($address);

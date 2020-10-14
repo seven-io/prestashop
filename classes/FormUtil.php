@@ -10,8 +10,10 @@
  * @license   LICENSE
  */
 
-class FormUtil {
-    public static function signaturePosition($label, $hintDesc, $tab, $toName) {
+class FormUtil
+{
+    public static function signaturePosition($label, $hintDesc, $tab, $toName)
+    {
         return [
             'tab' => $tab,
             'type' => 'radio',
@@ -21,7 +23,7 @@ class FormUtil {
             'label' => $label,
             'hint' => $hintDesc,
             'desc' => $hintDesc,
-            'values' => array_map(static function($pos) {
+            'values' => array_map(static function ($pos) {
                 return [
                     'id' => "sms77_config_signature_position_$pos",
                     'label' => $pos,
@@ -31,7 +33,8 @@ class FormUtil {
         ];
     }
 
-    public static function toName($key) {
+    public static function toName($key)
+    {
         return "config[$key]";
     }
 
@@ -41,7 +44,8 @@ class FormUtil {
      * @param string | null $tab
      * @return array
      */
-    public static function makeTextarea($name, $text, $tab) {
+    public static function makeTextarea($name, $text, $tab)
+    {
         return [
             'desc' => $text,
             'hint' => $text,
@@ -61,8 +65,14 @@ class FormUtil {
      * @param string|null $desc
      * @return array
      */
-    public static function makeSwitch($name, $label, $shortAction = null,
-                                      $isBool = false, $tab = null, $desc = null) {
+    public static function makeSwitch(
+        $name,
+        $label,
+        $shortAction = null,
+        $isBool = false,
+        $tab = null,
+        $desc = null
+    ) {
         if (!$shortAction) {
             $shortAction = $name;
         }

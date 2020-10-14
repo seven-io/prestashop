@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d57df0063bf1cecd28ee966e9c6c39bf",
+    "content-hash": "96d2d3fc5ba905ed3ebcdbd302221764",
     "packages": [
         {
             "name": "sms77/api",
-            "version": "dev-master",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sms77io/php-api.git",
-                "reference": "8d46be72cecb6283f4597924573c145be57c93db"
+                "reference": "8c2201ed686f257321947de75f7ab2153dab39ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sms77io/php-api/zipball/8d46be72cecb6283f4597924573c145be57c93db",
-                "reference": "8d46be72cecb6283f4597924573c145be57c93db",
+                "url": "https://api.github.com/repos/sms77io/php-api/zipball/8c2201ed686f257321947de75f7ab2153dab39ad",
+                "reference": "8c2201ed686f257321947de75f7ab2153dab39ad",
                 "shasum": ""
             },
             "require": {
@@ -57,15 +57,13 @@
                 "gateway",
                 "sms"
             ],
-            "time": "2020-09-04T13:17:31+00:00"
+            "time": "2020-09-23T12:45:58+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "sms77/api": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
