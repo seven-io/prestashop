@@ -30,7 +30,7 @@ class sms77 extends Module {
         $this->version = '1.7.0';
         $this->author = 'sms77 e.K.';
         $this->need_instance = 0;
-        $this->module_key = '7c33461cc60fc57e9746c6d288b6487e';
+        $this->module_key = '597145e6fdfc3580abe1afc34f7f3971';
         parent::__construct();
 
         $this->__moduleDir = dirname(__FILE__);
