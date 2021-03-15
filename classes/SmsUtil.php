@@ -14,7 +14,8 @@
  */
 
 use Sms77\Api\Client;
-use Sms77\Api\SmsOptions;
+use Sms77\Api\Constant\SmsOptions;
+use Sms77\Api\Exception\InvalidRequiredArgumentException;
 
 class SmsUtil
 {
@@ -79,6 +80,8 @@ class SmsUtil
                 ? $res : null;
         }
 
+        PrestaShopLogger::addLog('Sms77: No phone numbers to send bulk SMS.');
+
         return null;
     }
 
@@ -86,23 +89,27 @@ class SmsUtil
      * @param array $cfg
      * @param boolean $ignoreSignature
      * @return mixed|null
+     * @throws InvalidRequiredArgumentException
      */
     public static function validateAndSend($cfg, $ignoreSignature = false)
     {
         $to = $cfg[SmsOptions::To];
         $text = $cfg[SmsOptions::Text];
+        unset($cfg[SmsOptions::Text], $cfg[SmsOptions::To]);
 
         if (is_array($to)) {
             $to = Util::stringifyUniqueList($to);
         }
 
         if (!Tools::strlen($to)) {
+            PrestaShopLogger::addLog('Sms77: Cannot send - no recipient given.');
             return null;
         }
 
         $apiKey = Configuration::get(Constants::API_KEY);
 
         if (!Tools::strlen($apiKey)) {
+            PrestaShopLogger::addLog('Sms77: Cannot send - no API key.');
             return null;
         }
 
@@ -118,7 +125,7 @@ class SmsUtil
             $cfg[SmsOptions::Json] = true;
         }
 
-        unset($cfg[SmsOptions::Text], $cfg[SmsOptions::To]);
+        PrestaShopLogger::addLog("Sms77: Send SMS to $to with text: '$text'.");
 
         return json_decode((new Client($apiKey, 'prestashop'))
             ->sms($to, $text, $cfg), true);

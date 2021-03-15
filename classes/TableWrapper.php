@@ -77,12 +77,17 @@ class TableWrapper
      * @param array $groups
      * @param array $countries
      * @return array
+     * @throws PrestaShopDatabaseException
      */
     public static function getActiveCustomerAddressesByGroupsAndCountries($groups, $countries)
     {
         return array_map(static function ($address) use ($groups) {
-            return $address + TableWrapper::getActiveCustomerByGroups($address['id_customer'], $groups);
-        }, TableWrapper::getActiveCustomerAddressesByCountries($countries));
+            $customerId = $address['id_customer'];
+            $customer = TableWrapper::getActiveCustomerByGroups($customerId, $groups);
+            $customer = $customer ?: [];
+
+            return $address + $customer;
+        }, self::getActiveCustomerAddressesByCountries($countries));
     }
 
     /**

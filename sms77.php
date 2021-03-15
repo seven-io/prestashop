@@ -29,7 +29,7 @@ class Sms77 extends Module
     {
         $this->config = Constants::CONFIGURATION;
         $this->name = 'sms77';
-        $this->version = '1.7.1';
+        $this->version = '1.8.0';
         $this->author = 'sms77 e.K.';
         $this->need_instance = 0;
         $this->module_key = '597145e6fdfc3580abe1afc34f7f3971';
@@ -60,7 +60,7 @@ class Sms77 extends Module
             foreach (Tools::getValue('config') as $k => $v) {
                 if (Constants::API_KEY === $k && 0 === Tools::strlen($v)) {
                     $output .= $this->displayError(
-                        $this->l('An API key is required in order to send SMS. Get yours at http://sms77.io.')
+                        $this->l('An API key is required in order to send SMS. Get yours now at https://sms77.io.')
                     );
                 }
 
@@ -80,6 +80,7 @@ class Sms77 extends Module
     public function hookActionOrderStatusPostUpdate(array $data)
     {
         $order = isset($data['Order']) ? $data['Order'] : $data['cart'];
+        $order = $order ?: new Order($data['id_order']);
 
         $address = (array)new Address((int)(Tools::strlen($order->id_address_delivery)
             ? $order->id_address_delivery
@@ -87,10 +88,12 @@ class Sms77 extends Module
 
         $action = Util::getOrderStateAction($data['newOrderStatus']);
 
-        if (null !== $action && 1 === (int)Configuration::get("SMS77_MSG_ON_$action")) {
+        if (null !== $action
+            && 1 === (int)Configuration::get("SMS77_MSG_ON_$action")) {
             $res = SmsUtil::validateAndSend([
-                'to' => (new OrderPersonalizer($action, $address, $data['id_order']))->getTransformed(),
-                'text' => Util::getRecipient($address),
+                'text' => (new OrderPersonalizer($action, $address, $data['id_order']))
+                    ->getTransformed(),
+                'to' => Util::getRecipient($address),
             ]);
 
             SmsUtil::insert($res, Tools::strtolower("on_$action"), []);

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "96d2d3fc5ba905ed3ebcdbd302221764",
+    "content-hash": "e8561fd5bbfb8676949ea7b701c59764",
     "packages": [
         {
             "name": "sms77/api",
@@ -57,6 +57,13 @@
                 "gateway",
                 "sms"
             ],
+            "support": {
+                "docs": "https://github.com/sms77io/php-api",
+                "email": "support@sms77.io",
+                "issues": "https://github.com/sms77io/php-api/issues",
+                "rss": "https://www.sms77.io/de/feed/",
+                "source": "https://github.com/sms77io/php-api"
+            },
             "time": "2020-09-23T12:45:58+00:00"
         }
     ],
@@ -72,5 +79,8 @@
         "ext-pdo": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "platform-overrides": {
+        "php": "7.3"
+    },
+    "plugin-api-version": "2.0.0"
 }

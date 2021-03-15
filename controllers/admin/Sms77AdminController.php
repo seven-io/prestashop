@@ -10,7 +10,7 @@
  * @license   LICENSE
  */
 
-use Sms77\Api\SmsOptions;
+use Sms77\Api\Constant\SmsOptions;
 
 class Sms77AdminController extends ModuleAdminController
 {

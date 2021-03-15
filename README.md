@@ -1,5 +1,5 @@
 ![Sms77.io Logo](https://www.sms77.io/wp-content/uploads/2019/07/sms77-Logo-400x79.png "sms77io")
-# sms77.io PrestaShop Module
+# Official Module for PrestaShop 1.6+
 
 ## Installation
 - Via GitHub

@@ -3,16 +3,19 @@
     {
       "name": "André Matthies",
       "email": "a.matthies@sms77.io",
-      "homepage": "http://www.sms77.io",
+      "homepage": "https://sms77.io",
       "role": "Developer"
     }
   ],
   "autoload": {
+    "psr-4": {
+      "PrestaShop\\Module\\Sms77\\": "src"
+    },
     "classmap": [
-      "classes",
-      "controllers",
-      "sms77.php",
-      "models"
+      "classes/",
+      "controllers/",
+      "models/",
+      "sms77.php"
     ]
   },
   "config": {
@@ -20,14 +23,16 @@
     "prepend-autoloader": false
   },
   "description": "Sms77.io API module for PrestaShop 1.6+ applications.",
-  "homepage": "https://github.com/sms77io/prestashop-module",
+  "homepage": "https://github.com/sms77io/prestashop",
   "keywords": [
     "prestashop",
-    "sms"
+    "sms",
+    "marketing",
+    "communication"
   ],
   "license": "MIT",
   "minimum-stability": "dev",
-  "name": "sms77/prestashop-module",
+  "name": "sms77/prestashop",
   "prefer-stable": true,
   "require": {
     "php": ">=5.6.0",
@@ -38,8 +43,8 @@
   "support": {
     "email": "support@sms77.io",
     "rss": "https://www.sms77.io/de/feed/",
-    "source": "https://github.com/sms77io/prestashop-module",
-    "docs": "https://github.com/sms77io/prestashop-module"
+    "source": "https://github.com/sms77io/prestashop",
+    "docs": "https://github.com/sms77io/prestashop"
   },
   "type": "prestashop-module"
 }
