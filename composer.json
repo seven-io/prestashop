@@ -22,7 +22,7 @@
     "preferred-install": "dist",
     "prepend-autoloader": false
   },
-  "description": "Sms77.io API module for PrestaShop 1.6+ applications.",
+  "description": "Sms77.io module for PrestaShop 1.6+ applications.",
   "homepage": "https://github.com/sms77io/prestashop",
   "keywords": [
     "prestashop",
@@ -46,5 +46,8 @@
     "source": "https://github.com/sms77io/prestashop",
     "docs": "https://github.com/sms77io/prestashop"
   },
-  "type": "prestashop-module"
+  "type": "prestashop-module",
+  "require-dev": {
+    "prestashop/autoindex": "^1.0"
+  }
 }

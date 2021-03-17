@@ -29,7 +29,7 @@ class Sms77 extends Module
     {
         $this->config = Constants::CONFIGURATION;
         $this->name = 'sms77';
-        $this->version = '1.8.0';
+        $this->version = '1.8.1';
         $this->author = 'sms77 e.K.';
         $this->need_instance = 0;
         $this->module_key = '597145e6fdfc3580abe1afc34f7f3971';

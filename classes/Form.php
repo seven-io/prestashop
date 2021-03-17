@@ -20,8 +20,8 @@ class Form extends HelperForm
         $this->currentIndex = Sms77AdminController::$currentIndex . "&configure=$name";
         $this->default_form_language = $defaultLang;
 
-        foreach (Configuration::getMultiple(array_keys(Constants::CONFIGURATION))
-            as $k => $v) {
+        $config = Configuration::getMultiple(array_keys(Constants::CONFIGURATION));
+        foreach ($config as $k => $v) {
             $optionName = "config[$k]";
 
             if (is_array($v)) {

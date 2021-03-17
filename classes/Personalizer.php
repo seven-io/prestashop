@@ -87,7 +87,7 @@ class Personalizer
     {
         $n = 0;
 
-        foreach ($this->placeholders as $placeholder => $replace) {
+        foreach ($this->placeholders as $replace) {
             $this->replace($n, $replace);
 
             $n++;
