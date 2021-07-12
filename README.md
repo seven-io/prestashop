@@ -1,23 +1,23 @@
 ![Sms77.io Logo](https://www.sms77.io/wp-content/uploads/2019/07/sms77-Logo-400x79.png "sms77io")
-# Official Module for PrestaShop 1.6+
+# Official module for PrestaShop 1.6 & 1.7
 
 ## Installation
 **Via GitHub**
-1. Head to /releases and download the latest *.ZIP.
-2. Extract the files inside /modules/sms77_api.
-3. Head to the module manager and search for sms77.
-4. Click on the install button.
+1. [Download](https://github.com/sms77io/prestashop/releases/latest/download/sms77-prestashop.zip) the latest release as *.zip
+2. Extract archive `unzip -d /path/to/prestashop/modules`
+3. Go to the `module manager` and search for `sms77`
+4. Click on the `install` button
 
 
 **Via Composer**
-1. Open a shell and navigate to the PrestaShop installation.
-2. Run composer require sms77/prestashop-module.
-3. Head to the module manager and activate sms77 API.
+1. Open a shell and navigate to the PrestaShop installation
+2. Run `composer require sms77/prestashop-module`
+3. Go to the `module manager` and activate `sms77`
 
 ### Usage
-Go to the module manager and search for sms77. 
-Click on the settings button and look through the available options.
-Remember to set your API-Key in order to be able to send messages.
+Go to the module manager and search for `sms77`. 
+Click on the `settings` button and look through the available options.
+Remember to set your API key in order to be able to send messages.
 
 Available message placeholders:
 - {0} => First name
@@ -33,7 +33,7 @@ Available message placeholders:
 
 ###### Support
 
-Need help? Feel free to send us an <a href='mailto: support@sms77.io'>email</a>.
+Need help? Feel free to [contact us](https://www.sms77.io/en/company/contact/).
 
 [![MIT](https://img.shields.io/badge/License-MIT-teal.svg)](./LICENSE)
 

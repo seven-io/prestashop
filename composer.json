@@ -8,9 +8,6 @@
     }
   ],
   "autoload": {
-    "psr-4": {
-      "PrestaShop\\Module\\Sms77\\": "src"
-    },
     "classmap": [
       "classes/",
       "controllers/",
@@ -22,7 +19,7 @@
     "preferred-install": "dist",
     "prepend-autoloader": false
   },
-  "description": "Sms77.io module for PrestaShop 1.6+ applications.",
+  "description": "Sms77.io module for PrestaShop 1.6 & 1.7 applications.",
   "homepage": "https://github.com/sms77io/prestashop",
   "keywords": [
     "prestashop",
