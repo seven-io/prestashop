@@ -1,13 +1,10 @@
 <?php
 /**
  * NOTICE OF LICENSE
- *
  * This file is licenced under the Software License Agreement.
  * With the purchase or the installation of the software in your application
  * you accept the licence agreement.
- *
  * You must not modify, adapt or create derivative works of this source code
- *
  * @author    sms77.io
  * @copyright 2019-present sms77 e.K.
  * @license   LICENSE
@@ -17,26 +14,22 @@ use Sms77\Api\Client;
 use Sms77\Api\Constant\SmsOptions;
 use Sms77\Api\Exception\InvalidRequiredArgumentException;
 
-class SmsUtil
-{
+class SmsUtil {
     /**
      * @return array|mixed|null
-     * @throws PrestaShopDatabaseException|ReflectionException
+     * @throws PrestaShopDatabaseException|ReflectionException|InvalidRequiredArgumentException
      */
-    public static function sendBulk()
-    {
+    public static function sendBulk() {
         $form = Tools::getAllValues();
         $cfg = Util::parseFormByClass(
             SmsOptions::class,
             static function (&$smsConfig, $k) use ($form) {
                 $optionValue = isset($form[$k]) ? $form[$k] : false;
 
-                if (false === $optionValue) {
-                    unset($smsConfig[$k]);
-                } else {
-                    if ('1' === $optionValue || '0' === $optionValue) {
+                if (false === $optionValue) unset($smsConfig[$k]);
+                else {
+                    if ('1' === $optionValue || '0' === $optionValue)
                         $optionValue = (bool)$optionValue;
-                    }
 
                     $smsConfig[$k] = $optionValue;
                 }
@@ -45,19 +38,18 @@ class SmsUtil
         $countries = Tools::getValue(Constants::BULK_COUNTRIES, []);
         $groups = Tools::getValue(Constants::BULK_GROUPS, []);
         $ignoreSignature = (boolean)$form['ignore_signature'];
-        $activeCustomers = TableWrapper::getActiveCustomerAddressesByGroupsAndCountries(
-            $groups,
-            $countries
-        );
+        $activeCustomerAddresses =
+            TableWrapper::getActiveCustomerAddressesByGroupsAndCountries(
+                $groups, $countries);
 
-        if ((new Personalizer($cfg[SmsOptions::Text]))->fillPlaceholders()->getHasPlaceholder()) {
+        if ((new Personalizer($cfg[SmsOptions::Text]))->hasPlaceholders()) {
             $res = [];
 
-            foreach ($activeCustomers as $activeCustomer) {
-                $cfg[SmsOptions::Text] = (new Personalizer($cfg[SmsOptions::Text]))
-                    ->addAddress($activeCustomer)
-                    ->fillPlaceholders()->getTransformed();
-                $cfg[SmsOptions::To] = Util::getRecipient($activeCustomer);
+            foreach ($activeCustomerAddresses as $address) {
+                $cfg[SmsOptions::Text] =
+                    (new Personalizer($cfg[SmsOptions::Text], compact('address')))
+                        ->getTransformed();
+                $cfg[SmsOptions::To] = Util::getRecipient($address);
                 $res[] = self::validateAndSend($cfg, $ignoreSignature);
             }
 
@@ -67,7 +59,7 @@ class SmsUtil
 
         $phoneNumbers = array_map(static function ($d) {
             return Util::getRecipient($d);
-        }, $activeCustomers);
+        }, $activeCustomerAddresses);
 
         if (count($phoneNumbers)) {
             $res = self::validateAndSend([
@@ -91,15 +83,12 @@ class SmsUtil
      * @return mixed|null
      * @throws InvalidRequiredArgumentException
      */
-    public static function validateAndSend($cfg, $ignoreSignature = false)
-    {
+    public static function validateAndSend(array $cfg, $ignoreSignature = false) {
         $to = $cfg[SmsOptions::To];
         $text = $cfg[SmsOptions::Text];
         unset($cfg[SmsOptions::Text], $cfg[SmsOptions::To]);
 
-        if (is_array($to)) {
-            $to = Util::stringifyUniqueList($to);
-        }
+        if (is_array($to)) $to = Util::stringifyUniqueList($to);
 
         if (!Tools::strlen($to)) {
             PrestaShopLogger::addLog('Sms77: Cannot send - no recipient given.');
@@ -113,19 +102,17 @@ class SmsUtil
             return null;
         }
 
-        if (!$ignoreSignature) {
-            $text = self::addSignature($text);
-        }
+        if (!$ignoreSignature) $text = self::addSignature($text);
 
-        if (!array_key_exists(SmsOptions::From, $cfg)) {
+        if (!array_key_exists(SmsOptions::From, $cfg))
             $cfg[SmsOptions::From] = Configuration::get(Constants::FROM);
-        }
 
-        if (!array_key_exists(SmsOptions::Json, $cfg)) {
-            $cfg[SmsOptions::Json] = true;
-        }
+        if (!array_key_exists(SmsOptions::Json, $cfg)) $cfg[SmsOptions::Json] = true;
 
-        PrestaShopLogger::addLog("Sms77: Send SMS to $to with text: '$text'.");
+        PrestaShopLogger::addLog('Sms77: Send SMS to ' . $to . ' with text: ' . $text);
+
+        $cfg['type'] = 'direct'; // sms77/api#php5.6 fix
+        if (isset($cfg['ttl']) && '' === $cfg['ttl']) unset($cfg['ttl']); // sms77/api#php5.6 fix
 
         return json_decode((new Client($apiKey, 'prestashop'))
             ->sms($to, $text, $cfg), true);
@@ -135,12 +122,9 @@ class SmsUtil
      * @param string $msg
      * @return string
      */
-    private static function addSignature($msg)
-    {
+    private static function addSignature($msg) {
         $signature = Tools::getValue(
-            Constants::SIGNATURE,
-            Configuration::get(Constants::SIGNATURE)
-        );
+            Constants::SIGNATURE, Configuration::get(Constants::SIGNATURE));
 
         if (Tools::strlen($signature)) {
             $signaturePosition = Tools::getValue(
@@ -148,11 +132,8 @@ class SmsUtil
                 Configuration::get(Constants::SIGNATURE_POSITION)
             );
 
-            if ('append' === $signaturePosition) {
-                $msg .= $signature;
-            } else {
-                $msg = $signature . $msg;
-            }
+            if ('append' === $signaturePosition) $msg .= $signature;
+            else $msg = $signature . $msg;
         }
 
         return $msg;
@@ -167,11 +148,9 @@ class SmsUtil
      * @return bool
      * @throws PrestaShopDatabaseException
      */
-    public static function insert($res, $type, $cfg, $groups = [], $countries = [])
-    {
-        if (!$res) {
-            return false;
-        }
+    public static function insert(
+        $res, $type, array $cfg = [], array $groups = [], array $countries = []) {
+        if (!$res) return false;
 
         $data = [
             TableWrapper::RESPONSE => json_encode($res),
@@ -179,16 +158,34 @@ class SmsUtil
             TableWrapper::CONFIG => json_encode($cfg),
         ];
 
-        if (count($groups)) {
+        if (count($groups))
             $data[TableWrapper::GROUPS] = is_array($groups)
                 ? Util::stringifyUniqueList($groups) : $groups;
-        }
 
-        if (count($countries)) {
+        if (count($countries))
             $data[TableWrapper::COUNTRIES] = is_array($countries)
                 ? Util::stringifyUniqueList($countries) : $countries;
-        }
 
         return TableWrapper::insert($data);
+    }
+
+    /**
+     * @param Order|int $order
+     * @param string $action
+     * @param array $placeholders
+     * @return bool
+     * @throws InvalidRequiredArgumentException
+     * @throws PrestaShopDatabaseException
+     */
+    public static function sendEventSMS($order, $action, $placeholders = []) {
+        if (!($order instanceof Order)) $order = new Order($order);
+        $address = Util::getAddressForOrder($order);
+        $placeholders = array_merge(compact('address', 'order'), $placeholders);
+        $text = Configuration::get('SMS77_ON_' . $action);
+        $text = (new Personalizer($text, $placeholders))->getTransformed();
+        $to = Util::getRecipient($address);
+        $res = SmsUtil::validateAndSend(compact('text', 'to'));
+        $type = 'on_' . Tools::strtolower($action);
+        return SmsUtil::insert($res, $type);
     }
 }

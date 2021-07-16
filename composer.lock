@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "915b7193f5d83981f1b1fd6d7cb99f86",
+    "content-hash": "bab702f1aab6cb249aea3823639fdfb7",
     "packages": [
         {
             "name": "sms77/api",
-            "version": "1.2.1",
+            "version": "dev-php5.6",
             "source": {
                 "type": "git",
-                "url": "https://github.com/sms77io/php-api.git",
-                "reference": "8c2201ed686f257321947de75f7ab2153dab39ad"
+                "url": "https://github.com/sms77io/php-client.git",
+                "reference": "411cdc7e0b10f44ded20af19558465a57a7d5baa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sms77io/php-api/zipball/8c2201ed686f257321947de75f7ab2153dab39ad",
-                "reference": "8c2201ed686f257321947de75f7ab2153dab39ad",
+                "url": "https://api.github.com/repos/sms77io/php-client/zipball/411cdc7e0b10f44ded20af19558465a57a7d5baa",
+                "reference": "411cdc7e0b10f44ded20af19558465a57a7d5baa",
                 "shasum": ""
             },
             "require": {
@@ -50,21 +50,25 @@
                     "role": "Developer"
                 }
             ],
-            "description": "A simple PHP library for making CURL requests to the sms77.io gateway.",
+            "description": "A simple PHP library for requesting the Sms77.io SMS gateway.",
             "homepage": "https://github.com/sms77io/php-api",
             "keywords": [
                 "2fa",
+                "cnam",
                 "gateway",
-                "sms"
+                "hlr",
+                "mnp",
+                "sms",
+                "text2speech"
             ],
             "support": {
                 "docs": "https://github.com/sms77io/php-api",
                 "email": "support@sms77.io",
-                "issues": "https://github.com/sms77io/php-api/issues",
+                "issues": "https://github.com/sms77io/php-client/issues",
                 "rss": "https://www.sms77.io/de/feed/",
                 "source": "https://github.com/sms77io/php-api"
             },
-            "time": "2020-09-23T12:45:58+00:00"
+            "time": "2020-10-27T12:54:35+00:00"
         }
     ],
     "packages-dev": [
@@ -599,7 +603,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "sms77/api": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

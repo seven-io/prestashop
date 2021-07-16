@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<module>
+    <name>sms77</name>
+    <displayName><![CDATA[sms77]]></displayName>
+    <version><![CDATA[1.8.1]]></version>
+    <description><![CDATA[sms77.io module to programmatically send text messages.]]></description>
+    <author><![CDATA[sms77 e.K.]]></author>
+    <tab><![CDATA[advertising_marketing]]></tab>
+    <is_configurable>1</is_configurable>
+    <need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+</module>

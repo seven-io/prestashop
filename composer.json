@@ -1,9 +1,9 @@
 {
   "authors": [
     {
-      "name": "André Matthies",
       "email": "a.matthies@sms77.io",
-      "homepage": "https://sms77.io",
+      "homepage": "https://www.sms77.io",
+      "name": "André Matthies",
       "role": "Developer"
     }
   ],
@@ -22,10 +22,10 @@
   "description": "Sms77.io module for PrestaShop 1.6 & 1.7 applications.",
   "homepage": "https://github.com/sms77io/prestashop",
   "keywords": [
-    "prestashop",
-    "sms",
+    "communication",
     "marketing",
-    "communication"
+    "prestashop",
+    "sms"
   ],
   "license": "MIT",
   "minimum-stability": "dev",
@@ -33,15 +33,15 @@
   "prefer-stable": true,
   "require": {
     "php": ">=5.6.0",
-    "sms77/api": "1.2.1",
+    "sms77/api": "dev-php5.6",
     "ext-json": "*",
     "ext-pdo": "*"
   },
   "support": {
+    "docs": "https://github.com/sms77io/prestashop",
     "email": "support@sms77.io",
     "rss": "https://www.sms77.io/de/feed/",
-    "source": "https://github.com/sms77io/prestashop",
-    "docs": "https://github.com/sms77io/prestashop"
+    "source": "https://github.com/sms77io/prestashop"
   },
   "type": "prestashop-module",
   "require-dev": {

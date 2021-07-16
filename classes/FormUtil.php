@@ -10,22 +10,27 @@
  * @license   LICENSE
  */
 
-class FormUtil
-{
-    public static function signaturePosition($label, $hintDesc, $tab, $toName)
-    {
+class FormUtil {
+    /**
+     * @param string $label
+     * @param string $hintDesc
+     * @param string $tab
+     * @param string $toName
+     * @return array
+     */
+    public static function signaturePosition($label, $hintDesc, $tab, $toName) {
         return [
-            'tab' => $tab,
-            'type' => 'radio',
+            'desc' => $hintDesc,
+            'hint' => $hintDesc,
+            'label' => $label,
             'name' => $toName
                 ? self::toName(Constants::SIGNATURE_POSITION)
                 : Constants::SIGNATURE_POSITION,
-            'label' => $label,
-            'hint' => $hintDesc,
-            'desc' => $hintDesc,
+            'tab' => $tab,
+            'type' => 'radio',
             'values' => array_map(static function ($pos) {
                 return [
-                    'id' => "sms77_config_signature_position_$pos",
+                    'id' => 'sms77_config_signature_position_' . $pos,
                     'label' => $pos,
                     'value' => $pos,
                 ];
@@ -33,9 +38,12 @@ class FormUtil
         ];
     }
 
-    public static function toName($key)
-    {
-        return "config[$key]";
+    /**
+     * @param string $key
+     * @return string
+     */
+    public static function toName($key) {
+        return 'config[' . $key . ']';
     }
 
     /**
@@ -44,8 +52,7 @@ class FormUtil
      * @param string | null $tab
      * @return array
      */
-    public static function makeTextarea($name, $text, $tab)
-    {
+    public static function makeTextarea($name, $text, $tab) {
         return [
             'desc' => $text,
             'hint' => $text,
@@ -73,19 +80,11 @@ class FormUtil
         $tab = null,
         $desc = null
     ) {
-        if (!$shortAction) {
-            $shortAction = $name;
-        }
+        if (!$shortAction) $shortAction = $name;
 
         $values = [
-            [
-                'id' => $shortAction . '_on',
-                'value' => 1,
-            ],
-            [
-                'id' => $shortAction . '_off',
-                'value' => 0,
-            ],
+            ['id' => $shortAction . '_on', 'value' => 1,],
+            ['id' => $shortAction . '_off', 'value' => 0,],
         ];
 
         return [

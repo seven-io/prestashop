@@ -1,130 +1,99 @@
 <?php
 /**
  * NOTICE OF LICENSE
- *
  * This file is licenced under the Software License Agreement.
  * With the purchase or the installation of the software in your application
  * you accept the licence agreement.
- *
  * You must not modify, adapt or create derivative works of this source code
- *
  * @author    sms77.io
  * @copyright 2019-present sms77 e.K.
  * @license   LICENSE
  */
 
-class Personalizer
-{
-    /** @var string $msg */
-    private $msg;
-    /** @var string|string[] */
-    private $transformed;
-    /** @var array $placeholders */
-    private $placeholders = [];
+class Personalizer {
     /** @var boolean $hasPlaceholder */
     private $hasPlaceholder = false;
-    /** @var boolean $hasAddress */
-    private $hasAddress = false;
+
+    /** @var string $msg */
+    private $msg;
+
+    /** @var array $placeholders */
+    private $placeholders = [];
+
+    /** @var string|string[] */
+    private $transformed;
 
     /**
-     * Personalizer constructor.
+     * AbstractPersonalizer constructor.
      * @param string $msg
+     * @param array $address
+     * @param array $extraPlaceholders
      */
-    public function __construct($msg)
-    {
+    public function __construct($msg, array $placeholders = []) {
         $this->msg = $msg;
         $this->transformed = $msg;
+        $this->setPlaceholders($placeholders);
+
+        //die(var_dump($this->placeholders));
+
+        $this->fillPlaceholders();
     }
 
     /**
      * @param array $placeholders
      * @return $this
      */
-    public function addPlaceholders($placeholders)
-    {
-        foreach ($placeholders as $placeholder) {
-            $this->placeholders[] = $placeholder;
-        }
+    private function setPlaceholders(array $placeholders) {
+        foreach ($placeholders as $k => $v)
+            $this->placeholders[$k] = json_decode(json_encode($v), true);
 
         return $this;
     }
 
-    /**
-     * @param array $address
-     * @return $this
-     */
-    public function addAddress($address)
-    {
-        if (!$this->hasAddress) {
-            $placeholders = [$address['firstname'], $address['lastname']];
+    /** @return $this */
+    private function fillPlaceholders() {
+        $matches = [];
+        preg_match_all('{{{[a-z]+\.+[a-z]+}}}', $this->transformed, $matches);
+        //die(var_dump(['transformed' => $this->transformed, 'matches' => $matches]));
+        $this->hasPlaceholder = is_array($matches) && !empty($matches[0]);
 
-            foreach ($this->placeholders as $placeholder) {
-                $placeholders[] = $placeholder;
+        PrestaShopLogger::addLog('Sms77: $this->hasPlaceholder => ' . $this->hasPlaceholder);
+
+        if ($this->hasPlaceholder) foreach ($matches[0] as $match) {
+            $parts = explode('.', $match);
+            if (!$parts || empty($parts)) continue;
+            $o = str_replace('{{', '', $parts[0]);
+            $k = str_replace('}}', '', $parts[1]);
+
+            PrestaShopLogger::addLog('Sms77: $o => ' . $o);
+            PrestaShopLogger::addLog('Sms77: $k => ' . $k);
+
+            if (!isset($this->placeholders[$o][$k])) {
+                PrestaShopLogger::addLog('Sms77: !isset($this->placeholders[$o][$k]) => ' . $o . ' . ' .$k);
+                continue;
             }
 
-            $this->placeholders = $placeholders;
+            PrestaShopLogger::addLog('Sms77: $match => ' . $match);
 
-            $this->hasAddress = true;
+            $this->transformed = str_replace(
+                $match, $this->placeholders[$o][$k], $this->transformed);
         }
 
         return $this;
     }
 
     /** @return array */
-    public function getPlaceholders()
-    {
+    public function getPlaceholders() {
         return $this->placeholders;
     }
 
     /** @return bool */
-    public function getHasPlaceholder()
-    {
+    public function hasPlaceholders() {
         return $this->hasPlaceholder;
     }
 
-    /** @return $this */
-    public function fillPlaceholders()
-    {
-        $n = 0;
-
-        foreach ($this->placeholders as $replace) {
-            $this->replace($n, $replace);
-
-            $n++;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param $search
-     * @param $replace
-     * @return $this
-     */
-    private function replace($search, $replace)
-    {
-        $search = '{' . $search . '}';
-
-        if (false !== strpos($this->transformed, $search)) {
-            if (!$this->hasPlaceholder) {
-                $this->hasPlaceholder = true;
-            }
-
-            $this->transformed = str_replace($search, $replace, $this->transformed);
-        }
-
-        return $this;
-    }
-
-    /** @return string */
-    public function getMsg()
-    {
-        return $this->msg;
-    }
-
     /** @return string|string[] */
-    public function getTransformed()
-    {
+    public function getTransformed() {
         return $this->transformed;
     }
 }

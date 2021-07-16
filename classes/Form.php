@@ -10,26 +10,31 @@
  * @license   LICENSE
  */
 
-class Form extends HelperForm
-{
-    public function __construct($name)
-    {
+class Form extends HelperForm {
+    private function getOptionName($k, $v) {
+        $optionName = 'config[' . $k . ']';
+
+        if (is_array($v)) $optionName .= '[]';
+
+        return $optionName;
+    }
+
+    private function setFieldValues() {
+        $config = Configuration::getMultiple(array_keys(Constants::CONFIGURATION));
+
+        foreach ($config as $k => $v)
+            $this->fields_value[$this->getOptionName($k, $v)] = $v;
+    }
+
+    public function __construct($name) {
         parent::__construct();
+
         $defaultLang = (int)Configuration::get('PS_LANG_DEFAULT');
         $this->allow_employee_form_lang = $defaultLang;
-        $this->currentIndex = Sms77AdminController::$currentIndex . "&configure=$name";
+        $this->currentIndex = Sms77AdminController::$currentIndex . '&configure=' . $name;
         $this->default_form_language = $defaultLang;
 
-        $config = Configuration::getMultiple(array_keys(Constants::CONFIGURATION));
-        foreach ($config as $k => $v) {
-            $optionName = "config[$k]";
-
-            if (is_array($v)) {
-                $optionName .= '[]';
-            }
-
-            $this->fields_value[$optionName] = $v;
-        }
+        $this->setFieldValues();
 
         $this->fields_form = [
             [
@@ -43,13 +48,13 @@ class Form extends HelperForm
                     ],
                     'input' => [
                         [
+                            'desc' => $this->l('An API-Key is needed for sending. Get yours now at sms77.io'),
+                            'hint' => $this->l('Your sms77.io API-Key.'),
+                            'label' => $this->l('API-Key'),
+                            'name' => FormUtil::toName(Constants::API_KEY),
+                            'required' => true,
                             'tab' => 'settings',
                             'type' => 'text',
-                            'name' => FormUtil::toName(Constants::API_KEY),
-                            'label' => $this->l('API-Key'),
-                            'hint' => $this->l('Your sms77.io API-Key.'),
-                            'desc' => $this->l('An API-Key is needed for sending. Get yours now at sms77.io'),
-                            'required' => true,
                         ],
 
                         $this->makeBool(
@@ -78,13 +83,13 @@ class Form extends HelperForm
                             'Send a text message after refund initiation?'
                         ),
                         [
+                            'desc' => $this->l('Max 11 alphanumeric or 16 numeric characters.'),
+                            'hint' => $this->l('Set a custom sender number or name.'),
+                            'label' => $this->l('From'),
+                            'name' => FormUtil::toName(Constants::FROM),
+                            'size' => 16,
                             'tab' => 'settings',
                             'type' => 'text',
-                            'name' => FormUtil::toName(Constants::FROM),
-                            'label' => $this->l('From'),
-                            'hint' => $this->l('Set a custom sender number or name.'),
-                            'desc' => $this->l('Max 11 alphanumeric or 16 numeric characters.'),
-                            'size' => 16,
                         ],
                         $this->makeTextarea(
                             'ON_INVOICE',
@@ -128,22 +133,21 @@ class Form extends HelperForm
         $this->module = $this;
         $this->name = $name;
         $this->name_controller = $name;
+        $this->show_toolbar = true;
+        $this->submit_action = 'submit' . $name;
         $this->title = $name;
         $this->token = Tools::getAdminTokenLite('AdminModules');
-        $this->show_toolbar = true;
-        $this->submit_action = "submit$name";
         $this->toolbar_btn = [
-            'save' =>
-                [
-                    'desc' => $this->l('Save'),
-                    'href' => Sms77AdminController::$currentIndex
-                        . "&configure=$name&save$name&token="
-                        . Tools::getAdminTokenLite('AdminModules'),
-                ],
             'back' => [
                 'href' => Sms77AdminController::$currentIndex
                     . '&token=' . Tools::getAdminTokenLite('AdminModules'),
                 'desc' => $this->l('Back to list'),
+            ],
+            'save' => [
+                'desc' => $this->l('Save'),
+                'href' => Sms77AdminController::$currentIndex
+                    . "&configure=$name&save$name&token="
+                    . Tools::getAdminTokenLite('AdminModules'),
             ],
         ];
         $this->toolbar_scroll = true;
@@ -155,15 +159,10 @@ class Form extends HelperForm
      * @param string $desc
      * @return array
      */
-    private function makeBool($action, $label, $desc)
-    {
+    private function makeBool($action, $label, $desc) {
         return FormUtil::makeSwitch(
-            "config[SMS77_MSG_ON_$action]",
-            $label,
-            Tools::strtolower($action),
-            true,
-            'settings',
-            $desc
+            'config[SMS77_MSG_ON_' . $action . ']',
+            $label, Tools::strtolower($action), true, 'settings', $desc
         );
     }
 
@@ -172,12 +171,8 @@ class Form extends HelperForm
      * @param string $trans
      * @return array
      */
-    private function makeTextarea($action, $trans)
-    {
+    private function makeTextarea($action, $trans) {
         return FormUtil::makeTextarea(
-            "config[SMS77_$action]",
-            $trans,
-            'settings'
-        );
+            'config[SMS77_' . $action . ']', $trans, 'settings');
     }
 }

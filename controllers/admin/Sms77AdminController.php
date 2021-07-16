@@ -12,21 +12,16 @@
 
 use Sms77\Api\Constant\SmsOptions;
 
-class Sms77AdminController extends ModuleAdminController
-{
-    public function __construct()
-    {
+class Sms77AdminController extends ModuleAdminController {
+    public function __construct() {
         $this->table = 'sms77_message';
         $this->className = 'Sms77Message';
 
         parent::__construct();
     }
 
-    public function postProcess()
-    {
-        if (!Tools::isSubmit("submitAdd$this->table")) {
-            return;
-        }
+    public function postProcess() {
+        if (!Tools::isSubmit('submitAdd' . $this->table)) return;
 
         if (!Util::hasApiKey()) {
             $this->errors[] = Tools::displayError('No API key given.');
@@ -35,15 +30,13 @@ class Sms77AdminController extends ModuleAdminController
 
         $res = SmsUtil::sendBulk();
 
-        if (null === $res || (is_array($res) && !count($res))) {
+        if (null === $res || (is_array($res) && !count($res)))
             $this->errors[] = Tools::displayError('An error has occurred: ' . $res);
-        } else {
+        else
             Tools::redirectAdmin(self::$currentIndex . '&conf=4&token=' . $this->token);
-        }
     }
 
-    public function renderForm()
-    {
+    public function renderForm() {
         $this->redirectIfMissingApiKey();
 
         $context = Context::getContext();
@@ -193,15 +186,13 @@ class Sms77AdminController extends ModuleAdminController
         return parent::renderForm();
     }
 
-    private function redirectIfMissingApiKey()
-    {
+    private function redirectIfMissingApiKey() {
         if (!Util::hasApiKey()) {
             Tools::redirectAdmin(Util::pluginConfigLink());
         }
     }
 
-    public function renderList()
-    {
+    public function renderList() {
         $this->redirectIfMissingApiKey();
 
         $this->fields_list = [

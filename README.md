@@ -1,35 +1,52 @@
-![Sms77.io Logo](https://www.sms77.io/wp-content/uploads/2019/07/sms77-Logo-400x79.png "sms77io")
+![Sms77.io Logo](https://www.sms77.io/wp-content/uploads/2019/07/sms77-Logo-400x79.png 'sms77io')
+
 # Official module for PrestaShop 1.6 & 1.7
 
 ## Installation
-**Via GitHub**
-1. [Download](https://github.com/sms77io/prestashop/releases/latest/download/sms77-prestashop.zip) the latest release as *.zip
-2. Extract archive `unzip -d /path/to/prestashop/modules`
-3. Go to the `module manager` and search for `sms77`
-4. Click on the `install` button
-
 
 **Via Composer**
+
 1. Open a shell and navigate to the PrestaShop installation
 2. Run `composer require sms77/prestashop-module`
-3. Go to the `module manager` and activate `sms77`
+3. Administration: Go to `Modules->Module Manager` and activate `sms77`
+
+**Via GitHub**
+
+1. [Download](https://github.com/sms77io/prestashop/releases/latest/download/sms77-prestashop.zip)
+   the latest release as *.zip
+2. Extract archive `unzip -d /path/to/prestashop/modules <archive_name>.zip`
+3. Administration: Go to `Modules->Module Manager`, search for `sms77` and click `install`
 
 ### Usage
-Go to the module manager and search for `sms77`. 
-Click on the `settings` button and look through the available options.
-Remember to set your API key in order to be able to send messages.
 
-Available message placeholders:
-- {0} => First name
-- {1} => Last name
-- {2} => Order-ID (where available)
+Go to the module manager and search for `sms77`. Click on the `settings` button and look
+through the available options. Remember to set your API key in order to be able to send
+messages.
+
+**Available message placeholders:**
+
+- {address.&lt;property>} => Use a property from the *Address* object
+    - {address.firstname} resolves to the customers first name
+    - {address.lastname} resolves to the customers last name
+- {invoice.&lt;property>} => Use a property from the *OrderInvoice* object (available only
+  on invoice creation)
+    - {invoice.number} resolves to the invoice number
+    - {invoice.total_paid_tax_incl} resolves to the invoices total amount tax included
+- {order.&lt;property>} => Use a property from the *Order* object (if available)
+    - {order.id} resolves to the order ID
+    - {order.reference} resolves to the order reference
+
+**Addresses**: The delivery address takes precedence over the billing address. So if the
+delivery address differs to the billing address, the delivery address will be taken for
+message placeholders.
 
 #### Implemented Events
-- SMS77_MSG_ON_DELIVERY (orderStateId is 5)
-- SMS77_MSG_ON_INVOICE (orderStateId is 1, 10 or 13)
-- SMS77_MSG_ON_PAYMENT (orderStateId is 2 or 11)
-- SMS77_MSG_ON_REFUND (orderStateId is 7)
-- SMS77_MSG_ON_SHIPMENT (orderStateId is 4)
+
+- Delivery - the order status has been set to delivered
+- Invoice Creation - an order invoice has been created
+- Payment - the order has been marked as being fully paid
+- Refund - the order status has been set to refunded
+- Shipping - the order status has been set to shipped
 
 ###### Support
 
@@ -39,6 +56,6 @@ Need help? Feel free to [contact us](https://www.sms77.io/en/company/contact/).
 
 **Screenshots**
 
-![Screenshot of plugin configuration](https://tettra-production.s3.us-west-2.amazonaws.com/0d6efb4f154041e899af17bdcd19c1b5/bcac36a50716f4f73cd84020c4bf091d/d822b155a4112474fdb7aea5ee22465e/cb30d8dd64d0e83fcc7822a40f1703d9/mLBF1Q0g4SCVCXQSEfzElQAJBvxDiaqqTTSqY2lS.png "PrestaShop.Sms77: Plugin Configuration")
-![Screenshot of bulk SMS creation](https://tettra-production.s3.us-west-2.amazonaws.com/0d6efb4f154041e899af17bdcd19c1b5/bcac36a50716f4f73cd84020c4bf091d/d822b155a4112474fdb7aea5ee22465e/cb30d8dd64d0e83fcc7822a40f1703d9/8hpOqOKmtJkPkuEPHtw1nQJksLbhWZgsFbXDuCV2.png "PrestaShop.Sms77: Compose bulk SMS")
-![Screenshot of sent SMS](https://tettra-production.s3.us-west-2.amazonaws.com/0d6efb4f154041e899af17bdcd19c1b5/bcac36a50716f4f73cd84020c4bf091d/d822b155a4112474fdb7aea5ee22465e/cb30d8dd64d0e83fcc7822a40f1703d9/Ir18yYjK7ZtbkwWagNUIjmkCIKCbxeaGkO62Fbmz.png "PrestaShop.Sms77: Sent SMS")
+![Screenshot of plugin configuration](https://tettra-production.s3.us-west-2.amazonaws.com/0d6efb4f154041e899af17bdcd19c1b5/bcac36a50716f4f73cd84020c4bf091d/d822b155a4112474fdb7aea5ee22465e/cb30d8dd64d0e83fcc7822a40f1703d9/mLBF1Q0g4SCVCXQSEfzElQAJBvxDiaqqTTSqY2lS.png 'PrestaShop.Sms77: Plugin Configuration')
+![Screenshot of bulk SMS creation](https://tettra-production.s3.us-west-2.amazonaws.com/0d6efb4f154041e899af17bdcd19c1b5/bcac36a50716f4f73cd84020c4bf091d/d822b155a4112474fdb7aea5ee22465e/cb30d8dd64d0e83fcc7822a40f1703d9/8hpOqOKmtJkPkuEPHtw1nQJksLbhWZgsFbXDuCV2.png 'PrestaShop.Sms77: Compose bulk SMS')
+![Screenshot of sent SMS](https://tettra-production.s3.us-west-2.amazonaws.com/0d6efb4f154041e899af17bdcd19c1b5/bcac36a50716f4f73cd84020c4bf091d/d822b155a4112474fdb7aea5ee22465e/cb30d8dd64d0e83fcc7822a40f1703d9/Ir18yYjK7ZtbkwWagNUIjmkCIKCbxeaGkO62Fbmz.png 'PrestaShop.Sms77: Sent SMS')
