@@ -1,4 +1,5 @@
-![Sms77.io Logo](https://www.sms77.io/wp-content/uploads/2019/07/sms77-Logo-400x79.png 'sms77io')
+<img src="https://www.seven.io/wp-content/uploads/Logo.svg" width="250" />
+
 
 # Official module for PrestaShop 1.6 & 1.7
 
@@ -12,7 +13,7 @@
 
 **Via GitHub**
 
-1. [Download](https://github.com/sms77io/prestashop/releases/latest/download/sms77-prestashop.zip)
+1. [Download](https://github.com/seven-io/prestashop/releases/download/2.0.0/sms77-prestashop-2.0.0.zip)
    the latest release as *.zip
 2. Extract archive `unzip -d /path/to/prestashop/modules <archive_name>.zip`
 3. Administration: Go to `Modules->Module Manager`, search for `sms77` and click `install`
@@ -50,7 +51,7 @@ message placeholders.
 
 ###### Support
 
-Need help? Feel free to [contact us](https://www.sms77.io/en/company/contact/).
+Need help? Feel free to [contact us](https://www.seven.io/en/company/contact/).
 
 [![MIT](https://img.shields.io/badge/License-MIT-teal.svg)](./LICENSE)
 
