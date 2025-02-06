@@ -12,31 +12,37 @@
 
 if (!defined('_PS_VERSION_')) exit;
 
-if (file_exists(dirname(__FILE__) . '/vendor/autoload.php'))
-    require_once dirname(__FILE__) . '/vendor/autoload.php';
+$autoloadPath = __DIR__ . '/vendor/autoload.php';
+if (file_exists($autoloadPath)) {
+    require_once $autoloadPath;
+}
 
 class Sms77 extends Module {
-    protected $config;
-
     public function __construct() {
-        $this->__moduleDir = dirname(__FILE__);
         $this->author = 'sms77 e.K.';
         $this->bootstrap = true;
-        $this->config = Constants::CONFIGURATION;
-        $this->config[Constants::FROM] = Configuration::get('PS_SHOP_NAME');
-        $this->description =
-            $this->l('sms77.io module to programmatically send text messages.');
-        $this->displayName = 'sms77';
         $this->module_key = '597145e6fdfc3580abe1afc34f7f3971';
         $this->name = 'sms77';
         $this->need_instance = 0;
+        $this->tab = 'emailing';
+        $this->version = '2.0.0';
+
+        parent::__construct();
+
+        $this->description =
+            $this->l('sms77.io module to programmatically send text messages.');
+        $this->displayName = 'sms77';
+        $this->ps_version = (bool) version_compare(_PS_VERSION_, '1.7', '>=');
         $this->ps_versions_compliancy = [
-            'min' => '1.6',
+            'min' => '1.7',
             'max' => _PS_VERSION_,
         ];
-        $this->tab = 'advertising_marketing';
-        $this->version = '2.0.0';
-        parent::__construct();
+    }
+
+    public function getConfig(): array {
+        $cfg = Constants::CONFIGURATION;
+        $cfg[Constants::FROM] = Configuration::get('PS_SHOP_NAME');
+        return $cfg;
     }
 
     /**
@@ -141,7 +147,7 @@ class Sms77 extends Module {
 
         if (Shop::isFeatureActive()) Shop::setContext(Shop::CONTEXT_ALL);
 
-        foreach ($this->config as $k => $v) Configuration::updateValue($k, $v);
+        foreach ($this->getConfig() as $k => $v) Configuration::updateValue($k, $v);
 
         return parent::install();
     }
@@ -154,7 +160,7 @@ class Sms77 extends Module {
 
         foreach (Tab::getCollectionFromModule($this->name) as $tab) $tab->delete();
 
-        foreach (array_keys($this->config) as $k) Configuration::deleteByName($k);
+        foreach (array_keys($this->getConfig()) as $k) Configuration::deleteByName($k);
 
         return parent::uninstall();
     }
