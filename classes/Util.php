@@ -5,8 +5,8 @@
  * With the purchase or the installation of the software in your application
  * you accept the licence agreement.
  * You must not modify, adapt or create derivative works of this source code
- * @author    sms77.io
- * @copyright 2019-present sms77 e.K.
+ * @author    seven.io
+ * @copyright 2019-present seven communications GmbH & Co. KG
  * @license   LICENSE
  */
 
@@ -77,10 +77,10 @@ class Util {
     public static function log($data) {
         $data = json_encode($data);
         $logger = new FileLogger(0);
-        $logger->setFilename(_PS_ROOT_DIR_ . '/var/logs/sms77.log');
+        $logger->setFilename(_PS_ROOT_DIR_ . '/var/logs/seven.log');
         $logger->logDebug($data);
 
-        PrestaShopLogger::addLog('SMS77:' . PHP_EOL);
+        PrestaShopLogger::addLog('SEVEN:' . PHP_EOL);
         PrestaShopLogger::addLog($data);
     }
 
@@ -89,9 +89,9 @@ class Util {
      * @throws PrestaShopException
      */
     public static function pluginConfigLink() {
-        return Context::getContext()->link->getAdminLink('sms77', true, [
+        return Context::getContext()->link->getAdminLink('seven', true, [
             'route' => 'admin_module_configure_action',
-            'module_name' => 'sms77']);
+            'module_name' => 'seven']);
     }
 
     /**

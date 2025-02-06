@@ -5,8 +5,8 @@
  * With the purchase or the installation of the software in your application
  * you accept the licence agreement.
  * You must not modify, adapt or create derivative works of this source code
- * @author    sms77.io
- * @copyright 2019-present sms77 e.K.
+ * @author    seven.io
+ * @copyright 2019-present seven communications GmbH & Co. KG
  * @license   LICENSE
  */
 
@@ -72,7 +72,7 @@ class SmsUtil {
                 ? $res : null;
         }
 
-        PrestaShopLogger::addLog('Sms77: No phone numbers to send bulk SMS.');
+        PrestaShopLogger::addLog('Seven: No phone numbers to send bulk SMS.');
 
         return null;
     }
@@ -91,14 +91,14 @@ class SmsUtil {
         if (is_array($to)) $to = Util::stringifyUniqueList($to);
 
         if (!Tools::strlen($to)) {
-            PrestaShopLogger::addLog('Sms77: Cannot send - no recipient given.');
+            PrestaShopLogger::addLog('Seven: Cannot send - no recipient given.');
             return null;
         }
 
         $apiKey = Configuration::get(Constants::API_KEY);
 
         if (!Tools::strlen($apiKey)) {
-            PrestaShopLogger::addLog('Sms77: Cannot send - no API key.');
+            PrestaShopLogger::addLog('Seven: Cannot send - no API key.');
             return null;
         }
 
@@ -109,7 +109,7 @@ class SmsUtil {
 
         if (!array_key_exists(SmsOptions::Json, $cfg)) $cfg[SmsOptions::Json] = true;
 
-        PrestaShopLogger::addLog('Sms77: Send SMS to ' . $to . ' with text: ' . $text);
+        PrestaShopLogger::addLog('Seven: Send SMS to ' . $to . ' with text: ' . $text);
 
         $cfg['type'] = 'direct'; // sms77/api#php5.6 fix
         if (isset($cfg['ttl']) && '' === $cfg['ttl']) unset($cfg['ttl']); // sms77/api#php5.6 fix
@@ -181,7 +181,7 @@ class SmsUtil {
         if (!($order instanceof Order)) $order = new Order($order);
         $address = Util::getAddressForOrder($order);
         $placeholders = array_merge(compact('address', 'order'), $placeholders);
-        $text = Configuration::get('SMS77_ON_' . $action);
+        $text = Configuration::get('SEVEN_ON_' . $action);
         $text = (new Personalizer($text, $placeholders))->getTransformed();
         $to = Util::getRecipient($address);
         $res = SmsUtil::validateAndSend(compact('text', 'to'));

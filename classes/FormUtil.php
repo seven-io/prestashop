@@ -5,8 +5,8 @@
  * With the purchase or the installation of the software in your application
  * you accept the licence agreement.
  * You must not modify, adapt or create derivative works of this source code
- * @author    sms77.io
- * @copyright 2019-present sms77 e.K.
+ * @author    seven.io
+ * @copyright 2019-present seven communications GmbH & Co. KG
  * @license   LICENSE
  */
 
@@ -30,7 +30,7 @@ class FormUtil {
             'type' => 'radio',
             'values' => array_map(static function ($pos) {
                 return [
-                    'id' => 'sms77_config_signature_position_' . $pos,
+                    'id' => 'seven_config_signature_position_' . $pos,
                     'label' => $pos,
                     'value' => $pos,
                 ];

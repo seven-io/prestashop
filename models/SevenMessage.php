@@ -8,12 +8,12 @@
  *
  * You must not modify, adapt or create derivative works of this source code
  *
- * @author    sms77.io
- * @copyright 2019-present sms77 e.K.
+ * @author    seven.io
+ * @copyright 2019-present seven communications GmbH & Co. KG
  * @license   LICENSE
  */
 
-class Sms77Message extends ObjectModel
+class SevenMessage extends ObjectModel
 {
     /**
      * @see ObjectModel::$definition
@@ -25,8 +25,8 @@ class Sms77Message extends ObjectModel
                 'required' => true,
             ],
         ],
-        'primary' => 'id_sms77_message',
-        'table' => 'sms77_message',
+        'primary' => 'id_seven_message',
+        'table' => 'seven_message',
     ];
     /** @var string $response */
     public $response;

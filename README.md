@@ -1,26 +1,26 @@
 <img src="https://www.seven.io/wp-content/uploads/Logo.svg" width="250" />
 
 
-# Official module for PrestaShop 1.6 & 1.7
+# Official module for PrestaShop 1.6 & 1.7 & 8.x
 
 ## Installation
 
 **Via Composer**
 
 1. Open a shell and navigate to the PrestaShop installation
-2. Run `composer require sms77/prestashop-module`
-3. Administration: Go to `Modules->Module Manager` and activate `sms77`
+2. Run `composer require seven.io/prestashop`
+3. Administration: Go to `Modules->Module Manager` and activate `seven`
 
 **Via GitHub**
 
-1. [Download](https://github.com/seven-io/prestashop/releases/download/2.0.0/sms77-prestashop-2.0.0.zip)
+1. [Download](https://github.com/seven-io/prestashop/releases/latest)
    the latest release as *.zip
 2. Extract archive `unzip -d /path/to/prestashop/modules <archive_name>.zip`
-3. Administration: Go to `Modules->Module Manager`, search for `sms77` and click `install`
+3. Administration: Go to `Modules->Module Manager`, search for `seven` and click `install`
 
 ### Usage
 
-Go to the module manager and search for `sms77`. Click on the `settings` button and look
+Go to the module manager and search for `seven`. Click on the `settings` button and look
 through the available options. Remember to set your API key in order to be able to send
 messages.
 
@@ -53,10 +53,4 @@ message placeholders.
 
 Need help? Feel free to [contact us](https://www.seven.io/en/company/contact/).
 
-[![MIT](https://img.shields.io/badge/License-MIT-teal.svg)](./LICENSE)
-
-**Screenshots**
-
-![Screenshot of plugin configuration](https://tettra-production.s3.us-west-2.amazonaws.com/0d6efb4f154041e899af17bdcd19c1b5/bcac36a50716f4f73cd84020c4bf091d/d822b155a4112474fdb7aea5ee22465e/cb30d8dd64d0e83fcc7822a40f1703d9/mLBF1Q0g4SCVCXQSEfzElQAJBvxDiaqqTTSqY2lS.png 'PrestaShop.Sms77: Plugin Configuration')
-![Screenshot of bulk SMS creation](https://tettra-production.s3.us-west-2.amazonaws.com/0d6efb4f154041e899af17bdcd19c1b5/bcac36a50716f4f73cd84020c4bf091d/d822b155a4112474fdb7aea5ee22465e/cb30d8dd64d0e83fcc7822a40f1703d9/8hpOqOKmtJkPkuEPHtw1nQJksLbhWZgsFbXDuCV2.png 'PrestaShop.Sms77: Compose bulk SMS')
-![Screenshot of sent SMS](https://tettra-production.s3.us-west-2.amazonaws.com/0d6efb4f154041e899af17bdcd19c1b5/bcac36a50716f4f73cd84020c4bf091d/d822b155a4112474fdb7aea5ee22465e/cb30d8dd64d0e83fcc7822a40f1703d9/Ir18yYjK7ZtbkwWagNUIjmkCIKCbxeaGkO62Fbmz.png 'PrestaShop.Sms77: Sent SMS')
+[![MIT](https://img.shields.io/badge/License-MIT-teal.svg)](LICENSE)

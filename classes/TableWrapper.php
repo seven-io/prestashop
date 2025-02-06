@@ -5,18 +5,18 @@
  * With the purchase or the installation of the software in your application
  * you accept the licence agreement.
  * You must not modify, adapt or create derivative works of this source code
- * @author    sms77.io
- * @copyright 2019-present sms77 e.K.
+ * @author    seven.io
+ * @copyright 2019-present seven communications GmbH & Co. KG
  * @license   LICENSE
  */
 
 class TableWrapper {
     const _ACTIVE_AND_NOT_DELETED = 'q.active = 1 AND q.deleted = 0';
-    const BASE_NAME = 'sms77_message';
+    const BASE_NAME = 'seven_message';
     const CONFIG = 'config';
     const COUNTRIES = 'countries';
     const GROUPS = 'groups';
-    const ID = 'id_sms77_message';
+    const ID = 'id_seven_message';
     const NAME = _DB_PREFIX_ . self::BASE_NAME;
     const RESPONSE = 'response';
     const TIMESTAMP = 'timestamp';
@@ -32,7 +32,7 @@ class TableWrapper {
                 `' . self::GROUPS . '` VARCHAR(255),
                 `' . self::COUNTRIES . '` VARCHAR(255),
                 `' . self::CONFIG . '` TEXT,
-                PRIMARY KEY (id_sms77_message)
+                PRIMARY KEY (id_seven_message)
             ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;
         ');
     }

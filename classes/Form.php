@@ -5,8 +5,8 @@
  * With the purchase or the installation of the software in your application
  * you accept the licence agreement.
  * You must not modify, adapt or create derivative works of this source code
- * @author    sms77.io
- * @copyright 2019-present sms77 e.K.
+ * @author    seven.io
+ * @copyright 2019-present seven communications GmbH & Co. KG
  * @license   LICENSE
  */
 
@@ -31,7 +31,7 @@ class Form extends HelperForm {
 
         $defaultLang = (int)Configuration::get('PS_LANG_DEFAULT');
         $this->allow_employee_form_lang = $defaultLang;
-        $this->currentIndex = Sms77AdminController::$currentIndex . '&configure=' . $name;
+        $this->currentIndex = SevenAdminController::$currentIndex . '&configure=' . $name;
         $this->default_form_language = $defaultLang;
 
         $this->setFieldValues();
@@ -48,8 +48,8 @@ class Form extends HelperForm {
                     ],
                     'input' => [
                         [
-                            'desc' => $this->l('An API-Key is needed for sending. Get yours now at sms77.io'),
-                            'hint' => $this->l('Your sms77.io API-Key.'),
+                            'desc' => $this->l('An API-Key is needed for sending. Get yours now at seven.io'),
+                            'hint' => $this->l('Your seven.io API-Key.'),
                             'label' => $this->l('API-Key'),
                             'name' => FormUtil::toName(Constants::API_KEY),
                             'required' => true,
@@ -139,13 +139,13 @@ class Form extends HelperForm {
         $this->token = Tools::getAdminTokenLite('AdminModules');
         $this->toolbar_btn = [
             'back' => [
-                'href' => Sms77AdminController::$currentIndex
+                'href' => SevenAdminController::$currentIndex
                     . '&token=' . Tools::getAdminTokenLite('AdminModules'),
                 'desc' => $this->l('Back to list'),
             ],
             'save' => [
                 'desc' => $this->l('Save'),
-                'href' => Sms77AdminController::$currentIndex
+                'href' => SevenAdminController::$currentIndex
                     . "&configure=$name&save$name&token="
                     . Tools::getAdminTokenLite('AdminModules'),
             ],
@@ -161,7 +161,7 @@ class Form extends HelperForm {
      */
     private function makeBool($action, $label, $desc) {
         return FormUtil::makeSwitch(
-            'config[SMS77_MSG_ON_' . $action . ']',
+            'config[SEVEN_MSG_ON_' . $action . ']',
             $label, Tools::strtolower($action), true, 'settings', $desc
         );
     }
@@ -173,6 +173,6 @@ class Form extends HelperForm {
      */
     private function makeTextarea($action, $trans) {
         return FormUtil::makeTextarea(
-            'config[SMS77_' . $action . ']', $trans, 'settings');
+            'config[SEVEN_' . $action . ']', $trans, 'settings');
     }
 }

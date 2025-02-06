@@ -46,7 +46,7 @@
                 {
                     "name": "André Matthies",
                     "email": "a.matthies@sms77.io",
-                    "homepage": "http://www.sms77.io",
+                    "homepage": "http://www.seven.io",
                     "role": "Developer"
                 }
             ],
@@ -65,7 +65,7 @@
                 "docs": "https://github.com/sms77io/php-api",
                 "email": "support@sms77.io",
                 "issues": "https://github.com/sms77io/php-client/issues",
-                "rss": "https://www.sms77.io/de/feed/",
+                "rss": "https://www.seven.io/de/feed/",
                 "source": "https://github.com/sms77io/php-api"
             },
             "time": "2020-10-27T12:54:35+00:00"

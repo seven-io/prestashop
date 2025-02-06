@@ -8,18 +8,18 @@
  *
  * You must not modify, adapt or create derivative works of this source code
  *
- * @author    sms77.io
- * @copyright 2019-present sms77 e.K.
+ * @author    seven.io
+ * @copyright 2019-present seven communications GmbH & Co. KG
  * @license   LICENSE
  */
 
 abstract class Constants
 {
-    const API_KEY = 'SMS77_API_KEY';
+    const API_KEY = 'SEVEN_API_KEY';
 
-    const BULK = 'SMS77_BULK';
-    const BULK_COUNTRIES = 'SMS77_BULK_COUNTRIES';
-    const BULK_GROUPS = 'SMS77_BULK_GROUPS';
+    const BULK = 'SEVEN_BULK';
+    const BULK_COUNTRIES = 'SEVEN_BULK_COUNTRIES';
+    const BULK_GROUPS = 'SEVEN_BULK_GROUPS';
 
     const CONFIGURATION = [
         self::API_KEY => '',
@@ -39,19 +39,19 @@ abstract class Constants
         self::SIGNATURE_POSITION => 'append',
     ];
 
-    const FROM = 'SMS77_FROM';
+    const FROM = 'SEVEN_FROM';
 
-    const MSG_ON_DELIVERY = 'SMS77_MSG_ON_DELIVERY';
-    const MSG_ON_INVOICE = 'SMS77_MSG_ON_INVOICE';
-    const MSG_ON_PAYMENT = 'SMS77_MSG_ON_PAYMENT';
-    const MSG_ON_REFUND = 'SMS77_MSG_ON_REFUND';
-    const MSG_ON_SHIPMENT = 'SMS77_MSG_ON_SHIPMENT';
+    const MSG_ON_DELIVERY = 'SEVEN_MSG_ON_DELIVERY';
+    const MSG_ON_INVOICE = 'SEVEN_MSG_ON_INVOICE';
+    const MSG_ON_PAYMENT = 'SEVEN_MSG_ON_PAYMENT';
+    const MSG_ON_REFUND = 'SEVEN_MSG_ON_REFUND';
+    const MSG_ON_SHIPMENT = 'SEVEN_MSG_ON_SHIPMENT';
 
-    const ON_DELIVERY = 'SMS77_ON_DELIVERY';
-    const ON_INVOICE = 'SMS77_ON_INVOICE';
-    const ON_PAYMENT = 'SMS77_ON_PAYMENT';
-    const ON_REFUND = 'SMS77_ON_REFUND';
-    const ON_SHIPMENT = 'SMS77_ON_SHIPMENT';
+    const ON_DELIVERY = 'SEVEN_ON_DELIVERY';
+    const ON_INVOICE = 'SEVEN_ON_INVOICE';
+    const ON_PAYMENT = 'SEVEN_ON_PAYMENT';
+    const ON_REFUND = 'SEVEN_ON_REFUND';
+    const ON_SHIPMENT = 'SEVEN_ON_SHIPMENT';
 
     const ORDER_ACTION_DELIVERY = 'DELIVERY';
     const ORDER_ACTION_INVOICE = 'INVOICE';
@@ -59,7 +59,7 @@ abstract class Constants
     const ORDER_ACTION_REFUND = 'REFUND';
     const ORDER_ACTION_SHIPMENT = 'SHIPMENT';
 
-    const SIGNATURE = 'SMS77_SIGNATURE';
-    const SIGNATURE_POSITION = 'SMS77_SIGNATURE_POSITION';
+    const SIGNATURE = 'SEVEN_SIGNATURE';
+    const SIGNATURE_POSITION = 'SEVEN_SIGNATURE_POSITION';
     const SIGNATURE_POSITIONS = ['append', 'prepend',];
 }

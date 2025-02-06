@@ -5,8 +5,8 @@
  * With the purchase or the installation of the software in your application
  * you accept the licence agreement.
  * You must not modify, adapt or create derivative works of this source code
- * @author    sms77.io
- * @copyright 2019-present sms77 e.K.
+ * @author    seven.io
+ * @copyright 2019-present seven communications GmbH & Co. KG
  * @license   LICENSE
  */
 
@@ -57,7 +57,7 @@ class Personalizer {
         //die(var_dump(['transformed' => $this->transformed, 'matches' => $matches]));
         $this->hasPlaceholder = is_array($matches) && !empty($matches[0]);
 
-        PrestaShopLogger::addLog('Sms77: $this->hasPlaceholder => ' . $this->hasPlaceholder);
+        PrestaShopLogger::addLog('Seven: $this->hasPlaceholder => ' . $this->hasPlaceholder);
 
         if ($this->hasPlaceholder) foreach ($matches[0] as $match) {
             $parts = explode('.', $match);
@@ -65,15 +65,15 @@ class Personalizer {
             $o = str_replace('{{', '', $parts[0]);
             $k = str_replace('}}', '', $parts[1]);
 
-            PrestaShopLogger::addLog('Sms77: $o => ' . $o);
-            PrestaShopLogger::addLog('Sms77: $k => ' . $k);
+            PrestaShopLogger::addLog('Seven: $o => ' . $o);
+            PrestaShopLogger::addLog('Seven: $k => ' . $k);
 
             if (!isset($this->placeholders[$o][$k])) {
-                PrestaShopLogger::addLog('Sms77: !isset($this->placeholders[$o][$k]) => ' . $o . ' . ' .$k);
+                PrestaShopLogger::addLog('Seven: !isset($this->placeholders[$o][$k]) => ' . $o . ' . ' .$k);
                 continue;
             }
 
-            PrestaShopLogger::addLog('Sms77: $match => ' . $match);
+            PrestaShopLogger::addLog('Seven: $match => ' . $match);
 
             $this->transformed = str_replace(
                 $match, $this->placeholders[$o][$k], $this->transformed);

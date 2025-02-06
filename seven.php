@@ -5,8 +5,8 @@
  * With the purchase or the installation of the software in your application
  * you accept the licence agreement.
  * You must not modify, adapt or create derivative works of this source code
- * @author    sms77.io
- * @copyright 2019-present sms77 e.K.
+ * @author    seven.io
+ * @copyright 2019-present seven communications GmbH & Co. KG
  * @license   LICENSE
  */
 
@@ -17,21 +17,20 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
-class Sms77 extends Module {
+class Seven extends Module {
     public function __construct() {
-        $this->author = 'sms77 e.K.';
+        $this->author = 'seven communications GmbH & Co. KG';
         $this->bootstrap = true;
         $this->module_key = '597145e6fdfc3580abe1afc34f7f3971';
-        $this->name = 'sms77';
+        $this->name = 'seven';
         $this->need_instance = 0;
         $this->tab = 'emailing';
-        $this->version = '2.0.0';
+        $this->version = '3.0.0';
 
         parent::__construct();
 
-        $this->description =
-            $this->l('sms77.io module to programmatically send text messages.');
-        $this->displayName = 'sms77';
+        $this->description = $this->l('seven.io module to programmatically send text messages.');
+        $this->displayName = 'seven';
         $this->ps_version = (bool) version_compare(_PS_VERSION_, '1.7', '>=');
         $this->ps_versions_compliancy = [
             'min' => '1.7',
@@ -57,7 +56,7 @@ class Sms77 extends Module {
                 if (Constants::API_KEY === $k && 0 === Tools::strlen($v))
                     $output .= $this->displayError(
                         $this->l('An API key is required in order to send SMS. 
-                        Get yours now at https://sms77.io.')
+                        Get yours now at https://www.seven.io.')
                     );
 
                 Configuration::updateValue($k, $v);
@@ -126,7 +125,7 @@ class Sms77 extends Module {
         $order = $order ?: new Order($data['id_order']);
 
         $action = Util::getOrderStateAction($data['newOrderStatus']);
-        if (!$action || !Util::isEventEnabled('SMS77_MSG_ON_' . $action)) return;
+        if (!$action || !Util::isEventEnabled('SEVEN_MSG_ON_' . $action)) return;
 
         SmsUtil::sendEventSMS($order, $action);
     }
@@ -139,10 +138,10 @@ class Sms77 extends Module {
         TableWrapper::create();
 
         $tab = new Tab;
-        $tab->class_name = 'Sms77Admin';
+        $tab->class_name = 'SevenAdmin';
         $tab->id_parent = Tab::getIdFromClassName('AdminParentCustomerThreads');
         $tab->module = $this->name;
-        $tab->name[$this->context->language->id] = $this->l('Sms77 Bulk SMS');
+        $tab->name[$this->context->language->id] = $this->l('Seven Bulk SMS');
         $tab->add();
 
         if (Shop::isFeatureActive()) Shop::setContext(Shop::CONTEXT_ALL);

@@ -1,8 +1,8 @@
 {
   "authors": [
     {
-      "email": "a.matthies@sms77.io",
-      "homepage": "https://www.sms77.io",
+      "email": "a.matthies@seven.io",
+      "homepage": "https://www.seven.io",
       "name": "André Matthies",
       "role": "Developer"
     }
@@ -12,15 +12,15 @@
       "classes/",
       "controllers/",
       "models/",
-      "sms77.php"
+      "seven.php"
     ]
   },
   "config": {
     "preferred-install": "dist",
     "prepend-autoloader": false
   },
-  "description": "Sms77.io module for PrestaShop 1.6 & 1.7 applications.",
-  "homepage": "https://github.com/sms77io/prestashop",
+  "description": "seven.io module for PrestaShop 1.6 & 1.7 & 8.x applications.",
+  "homepage": "https://github.com/seven-io/prestashop",
   "keywords": [
     "communication",
     "marketing",
@@ -29,7 +29,7 @@
   ],
   "license": "MIT",
   "minimum-stability": "dev",
-  "name": "sms77/prestashop",
+  "name": "seven.io/prestashop",
   "prefer-stable": true,
   "require": {
     "php": ">=5.6.0",
@@ -38,10 +38,10 @@
     "ext-pdo": "*"
   },
   "support": {
-    "docs": "https://github.com/sms77io/prestashop",
-    "email": "support@sms77.io",
-    "rss": "https://www.sms77.io/de/feed/",
-    "source": "https://github.com/sms77io/prestashop"
+    "docs": "https://github.com/seven-io/prestashop",
+    "email": "support@seven.io",
+    "rss": "https://www.seven.io/de/feed/",
+    "source": "https://github.com/seven-io/prestashop"
   },
   "type": "prestashop-module",
   "require-dev": {

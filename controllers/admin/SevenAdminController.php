@@ -5,17 +5,17 @@
  * With the purchase or the installation of the software in your application
  * you accept the licence agreement.
  * You must not modify, adapt or create derivative works of this source code
- * @author    sms77.io
- * @copyright 2019-present sms77 e.K.
+ * @author    seven.io
+ * @copyright 2019-present seven communications GmbH & Co. KG
  * @license   LICENSE
  */
 
 use Sms77\Api\Constant\SmsOptions;
 
-class Sms77AdminController extends ModuleAdminController {
+class SevenAdminController extends ModuleAdminController {
     public function __construct() {
-        $this->table = 'sms77_message';
-        $this->className = 'Sms77Message';
+        $this->table = 'seven_message';
+        $this->className = 'SevenMessage';
 
         parent::__construct();
     }
@@ -196,7 +196,7 @@ class Sms77AdminController extends ModuleAdminController {
         $this->redirectIfMissingApiKey();
 
         $this->fields_list = [
-            'id_sms77_message' => [
+            'id_seven_message' => [
                 'title' => $this->module->l('ID'),
             ],
             'timestamp' => [
