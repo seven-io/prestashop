@@ -11,50 +11,27 @@
  */
 
 class Personalizer {
-    /** @var boolean $hasPlaceholder */
-    private $hasPlaceholder = false;
-
-    /** @var string $msg */
-    private $msg;
-
-    /** @var array $placeholders */
-    private $placeholders = [];
-
+    private bool $hasPlaceholder = false;
+    private string $msg;
+    private array $placeholders = [];
     /** @var string|string[] */
     private $transformed;
 
-    /**
-     * AbstractPersonalizer constructor.
-     * @param string $msg
-     * @param array $address
-     * @param array $extraPlaceholders
-     */
-    public function __construct($msg, array $placeholders = []) {
+    public function __construct(string $msg, array $placeholders = []) {
         $this->msg = $msg;
         $this->transformed = $msg;
         $this->setPlaceholders($placeholders);
-
-        //die(var_dump($this->placeholders));
-
         $this->fillPlaceholders();
     }
 
-    /**
-     * @param array $placeholders
-     * @return $this
-     */
-    private function setPlaceholders(array $placeholders) {
+    private function setPlaceholders(array $placeholders): void {
         foreach ($placeholders as $k => $v)
             $this->placeholders[$k] = json_decode(json_encode($v), true);
-
-        return $this;
     }
 
-    /** @return $this */
-    private function fillPlaceholders() {
+    private function fillPlaceholders(): void {
         $matches = [];
         preg_match_all('{{{[a-z]+\.+[a-z]+}}}', $this->transformed, $matches);
-        //die(var_dump(['transformed' => $this->transformed, 'matches' => $matches]));
         $this->hasPlaceholder = is_array($matches) && !empty($matches[0]);
 
         PrestaShopLogger::addLog('Seven: $this->hasPlaceholder => ' . $this->hasPlaceholder);
@@ -75,25 +52,20 @@ class Personalizer {
 
             PrestaShopLogger::addLog('Seven: $match => ' . $match);
 
-            $this->transformed = str_replace(
-                $match, $this->placeholders[$o][$k], $this->transformed);
+            $this->transformed = str_replace($match, $this->placeholders[$o][$k], $this->transformed);
         }
-
-        return $this;
     }
 
-    /** @return array */
-    public function getPlaceholders() {
+    public function getPlaceholders(): array {
         return $this->placeholders;
     }
 
-    /** @return bool */
-    public function hasPlaceholders() {
+    public function hasPlaceholders(): bool {
         return $this->hasPlaceholder;
     }
 
     /** @return string|string[] */
-    public function getTransformed() {
+    public function getTransformed(): array|string {
         return $this->transformed;
     }
 }

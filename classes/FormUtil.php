@@ -11,14 +11,7 @@
  */
 
 class FormUtil {
-    /**
-     * @param string $label
-     * @param string $hintDesc
-     * @param string $tab
-     * @param string $toName
-     * @return array
-     */
-    public static function signaturePosition($label, $hintDesc, $tab, $toName) {
+    public static function signaturePosition(string $label, string $hintDesc, string $tab, string $toName): array {
         return [
             'desc' => $hintDesc,
             'hint' => $hintDesc,
@@ -38,21 +31,11 @@ class FormUtil {
         ];
     }
 
-    /**
-     * @param string $key
-     * @return string
-     */
-    public static function toName($key) {
+    public static function toName(string $key): string {
         return 'config[' . $key . ']';
     }
 
-    /**
-     * @param string $name
-     * @param string $text
-     * @param string | null $tab
-     * @return array
-     */
-    public static function makeTextarea($name, $text, $tab) {
+    public static function makeTextarea(string $name, string $text, ?string $tab): array {
         return [
             'desc' => $text,
             'hint' => $text,
@@ -63,23 +46,14 @@ class FormUtil {
         ];
     }
 
-    /**
-     * @param string $name
-     * @param string $label
-     * @param string $shortAction
-     * @param boolean $isBool
-     * @param string | null $tab
-     * @param string|null $desc
-     * @return array
-     */
     public static function makeSwitch(
-        $name,
-        $label,
-        $shortAction = null,
-        $isBool = false,
-        $tab = null,
-        $desc = null
-    ) {
+        string $name,
+        string $label,
+        string $shortAction = null,
+        bool   $isBool = false,
+        string $tab = null,
+        string $desc = null
+    ): array {
         if (!$shortAction) $shortAction = $name;
 
         $values = [

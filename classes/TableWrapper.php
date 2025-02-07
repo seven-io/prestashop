@@ -22,7 +22,7 @@ class TableWrapper {
     const TIMESTAMP = 'timestamp';
     const TYPE = 'type';
 
-    public static function create() {
+    public static function create(): void {
         self::execute('
             CREATE TABLE IF NOT EXISTS ' . self::NAME . ' (
                 `' . self::ID . '` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -37,26 +37,16 @@ class TableWrapper {
         ');
     }
 
-    /**
-     * @param string $sql
-     * @return bool
-     */
-    public static function execute($sql) {
+    public static function execute(string $sql): bool {
         return Db::getInstance()->execute($sql);
     }
 
-    /** @return bool */
-    public static function drop() {
+    public static function drop(): bool {
         return self::execute('DROP TABLE ' . self::NAME);
     }
 
-    /**
-     * @param string $fields
-     * @param string|null $where
-     * @return array|bool|object|null
-     */
-    public static function get($fields = '*', $where = null) {
-        $sql = "SELECT $fields FROM " . self::NAME;
+    public static function get(string $fields = '*', string $where = null): object|bool|array|null {
+        $sql = 'SELECT ' . $fields . ' FROM ' . self::NAME;
 
         if (is_array($where)) $sql .= " WHERE $where[0] = $where[1]";
 
@@ -64,12 +54,9 @@ class TableWrapper {
     }
 
     /**
-     * @param array $groups
-     * @param array $countries
-     * @return array
      * @throws PrestaShopDatabaseException
      */
-    public static function getActiveCustomerAddressesByGroupsAndCountries($groups, $countries) {
+    public static function getActiveCustomerAddressesByGroupsAndCountries(array $groups, array $countries): array {
         return array_map(static function ($address) use ($groups) {
             $customerId = $address['id_customer'];
             $customer = TableWrapper::getActiveCustomerByGroups($customerId, $groups);
@@ -80,12 +67,9 @@ class TableWrapper {
     }
 
     /**
-     * @param int $id_customer
-     * @param array $groups
-     * @return mixed
      * @throws PrestaShopDatabaseException
      */
-    public static function getActiveCustomerByGroups($id_customer, $groups) {
+    public static function getActiveCustomerByGroups(int $id_customer, array $groups): mixed {
         $customer = self::dbQuery('*', 'customer',
             self::addWhereActiveAndNotDeletedIfSet(
                 "AND q.id_customer = $id_customer",
@@ -98,13 +82,10 @@ class TableWrapper {
     }
 
     /**
-     * @param string $select
-     * @param string $from
-     * @param string $where
      * @return array|bool|mysqli_result|PDOStatement|resource|null
      * @throws PrestaShopDatabaseException
      */
-    public static function dbQuery($select, $from, $where) {
+    public static function dbQuery(string $select, string $from, string $where): mixed {
         $sql = new DbQuery;
 
         $sql->select($select);
@@ -114,13 +95,7 @@ class TableWrapper {
         return Db::getInstance()->executeS($sql);
     }
 
-    /**
-     * @param string $where
-     * @param string $field
-     * @param array $array
-     * @return string
-     */
-    public static function addWhereActiveAndNotDeletedIfSet($where, $field, $array) {
+    public static function addWhereActiveAndNotDeletedIfSet(string $where, string $field, array $array): string {
         $where = self::_ACTIVE_AND_NOT_DELETED . " $where";
 
         if (count($array)) {
@@ -133,11 +108,10 @@ class TableWrapper {
     }
 
     /**
-     * @param array $countries
      * @return array|bool|mysqli_result|PDOStatement|resource|null
      * @throws PrestaShopDatabaseException
      */
-    public static function getActiveCustomerAddressesByCountries($countries) {
+    public static function getActiveCustomerAddressesByCountries(array $countries): mixed {
         return self::dbQuery('id_country, id_customer, phone, phone_mobile', 'address',
             self::addWhereActiveAndNotDeletedIfSet(
                 "AND q.id_customer != 0 AND q.phone_mobile<>'0000000000'",
@@ -148,11 +122,9 @@ class TableWrapper {
     }
 
     /**
-     * @param array $data
-     * @return bool
      * @throws PrestaShopDatabaseException
      */
-    public static function insert($data = []) {
+    public static function insert(array $data = []): bool {
         $db = Db::getInstance();
 
         foreach ($data as $k => $v) $data[$k] = $db->escape($v);

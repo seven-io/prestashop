@@ -19,7 +19,7 @@ class SmsUtil {
      * @return array|mixed|null
      * @throws PrestaShopDatabaseException|ReflectionException|InvalidRequiredArgumentException
      */
-    public static function sendBulk() {
+    public static function sendBulk(): mixed {
         $form = Tools::getAllValues();
         $cfg = Util::parseFormByClass(
             SmsOptions::class,
@@ -78,12 +78,10 @@ class SmsUtil {
     }
 
     /**
-     * @param array $cfg
-     * @param boolean $ignoreSignature
      * @return mixed|null
      * @throws InvalidRequiredArgumentException
      */
-    public static function validateAndSend(array $cfg, $ignoreSignature = false) {
+    public static function validateAndSend(array $cfg, bool $ignoreSignature = false): mixed {
         $to = $cfg[SmsOptions::To];
         $text = $cfg[SmsOptions::Text];
         unset($cfg[SmsOptions::Text], $cfg[SmsOptions::To]);
@@ -118,11 +116,7 @@ class SmsUtil {
             ->sms($to, $text, $cfg), true);
     }
 
-    /**
-     * @param string $msg
-     * @return string
-     */
-    private static function addSignature($msg) {
+    private static function addSignature(string $msg): string {
         $signature = Tools::getValue(
             Constants::SIGNATURE, Configuration::get(Constants::SIGNATURE));
 
@@ -140,16 +134,15 @@ class SmsUtil {
     }
 
     /**
-     * @param array | string | null $res
-     * @param string $type
-     * @param array $cfg
-     * @param array $groups
-     * @param array $countries
-     * @return bool
      * @throws PrestaShopDatabaseException
      */
     public static function insert(
-        $res, $type, array $cfg = [], array $groups = [], array $countries = []) {
+        array|string|null $res,
+        string            $type,
+        array             $cfg = [],
+        array             $groups = [],
+        array             $countries = []
+    ): bool {
         if (!$res) return false;
 
         $data = [
@@ -170,14 +163,10 @@ class SmsUtil {
     }
 
     /**
-     * @param Order|int $order
-     * @param string $action
-     * @param array $placeholders
-     * @return bool
      * @throws InvalidRequiredArgumentException
      * @throws PrestaShopDatabaseException
      */
-    public static function sendEventSMS($order, $action, $placeholders = []) {
+    public static function sendEventSMS(Order|int $order, string $action, array $placeholders = []): bool {
         if (!($order instanceof Order)) $order = new Order($order);
         $address = Util::getAddressForOrder($order);
         $placeholders = array_merge(compact('address', 'order'), $placeholders);

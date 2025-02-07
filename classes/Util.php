@@ -12,12 +12,9 @@
 
 class Util {
     /**
-     * @param string $class
-     * @param callable $cb
-     * @return array
      * @throws ReflectionException
      */
-    public static function parseFormByClass($class, callable $cb) {
+    public static function parseFormByClass(string $class, callable $cb): array {
         $array = array_flip((new ReflectionClass($class))->getConstants());
 
         foreach (array_keys($array) as $key) $cb($array, $key);
@@ -25,38 +22,22 @@ class Util {
         return $array;
     }
 
-    /**
-     * @param $action
-     * @return bool
-     */
-    public static function isEventEnabled($action) {
+    public static function isEventEnabled(string $action): bool {
         return 1 === (int)Configuration::get($action);
     }
 
-    /**
-     * @param Order $order
-     * @return array
-     */
-    public static function getAddressForOrder(Order $order) {
+    public static function getAddressForOrder(Order $order): array {
         return (array)new Address((int)(Tools::strlen($order->id_address_delivery)
             ? $order->id_address_delivery
             : $order->id_address_invoice));
     }
 
-    /**
-     * @param array $customer
-     * @return mixed
-     */
-    public static function getRecipient(array $customer) {
+    public static function getRecipient(array $customer): mixed {
         return '' === $customer['phone_mobile']
             ? $customer['phone'] : $customer['phone_mobile'];
     }
 
-    /**
-     * @param OrderState $orderState
-     * @return string|null
-     */
-    public static function getOrderStateAction(OrderState $orderState) {
+    public static function getOrderStateAction(OrderState $orderState): ?string {
         if (4 === $orderState->id) return Constants::ORDER_ACTION_SHIPMENT; // works
         if (5 === $orderState->id) return Constants::ORDER_ACTION_DELIVERY; // works
         if (7 === $orderState->id) return Constants::ORDER_ACTION_REFUND; // works
@@ -64,17 +45,11 @@ class Util {
         return null;
     }
 
-    /**
-     * @return bool
-     */
-    public static function hasApiKey() {
+    public static function hasApiKey(): bool {
         return (bool)Tools::strlen(Configuration::get(Constants::API_KEY));
     }
 
-    /**
-     * @param $data
-     */
-    public static function log($data) {
+    public static function log(mixed $data): void {
         $data = json_encode($data);
         $logger = new FileLogger(0);
         $logger->setFilename(_PS_ROOT_DIR_ . '/var/logs/seven.log');
@@ -85,20 +60,15 @@ class Util {
     }
 
     /**
-     * @return string
      * @throws PrestaShopException
      */
-    public static function pluginConfigLink() {
+    public static function pluginConfigLink(): string {
         return Context::getContext()->link->getAdminLink('seven', true, [
             'route' => 'admin_module_configure_action',
             'module_name' => 'seven']);
     }
 
-    /**
-     * @param array $items
-     * @return string
-     */
-    public static function stringifyUniqueList($items) {
+    public static function stringifyUniqueList(array $items): string {
         return implode(',', array_unique($items));
     }
 }

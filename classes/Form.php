@@ -11,7 +11,7 @@
  */
 
 class Form extends HelperForm {
-    private function getOptionName($k, $v) {
+    private function getOptionName($k, $v): string {
         $optionName = 'config[' . $k . ']';
 
         if (is_array($v)) $optionName .= '[]';
@@ -19,7 +19,7 @@ class Form extends HelperForm {
         return $optionName;
     }
 
-    private function setFieldValues() {
+    private function setFieldValues(): void {
         $config = Configuration::getMultiple(array_keys(Constants::CONFIGURATION));
 
         foreach ($config as $k => $v)
@@ -153,25 +153,14 @@ class Form extends HelperForm {
         $this->toolbar_scroll = true;
     }
 
-    /**
-     * @param string $action
-     * @param string $label
-     * @param string $desc
-     * @return array
-     */
-    private function makeBool($action, $label, $desc) {
+    private function makeBool(string $action, string $label, string $desc): array {
         return FormUtil::makeSwitch(
             'config[SEVEN_MSG_ON_' . $action . ']',
             $label, Tools::strtolower($action), true, 'settings', $desc
         );
     }
 
-    /**
-     * @param string $action
-     * @param string $trans
-     * @return array
-     */
-    private function makeTextarea($action, $trans) {
+    private function makeTextarea(string $action, string $trans): array {
         return FormUtil::makeTextarea(
             'config[SEVEN_' . $action . ']', $trans, 'settings');
     }
