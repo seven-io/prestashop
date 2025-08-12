@@ -1,7 +1,7 @@
 <img src="https://www.seven.io/wp-content/uploads/Logo.svg" width="250" />
 
 
-# Official module for PrestaShop 1.6 & 1.7 & 8.x
+# Official module for PrestaShop 1.7 & 8.x
 
 ## Installation
 

@@ -25,7 +25,7 @@ class Seven extends Module {
         $this->name = 'seven';
         $this->need_instance = 0;
         $this->tab = 'emailing';
-        $this->version = '3.0.0';
+        $this->version = '3.1.0';
 
         parent::__construct();
 
@@ -34,11 +34,11 @@ class Seven extends Module {
         $this->ps_version = (bool) version_compare(_PS_VERSION_, '1.7', '>=');
         $this->ps_versions_compliancy = [
             'min' => '1.7',
-            'max' => _PS_VERSION_,
+            'max' => '8.99.99',
         ];
     }
 
-    public function getConfig(): array {
+    public function getConfig(): array
         $cfg = Constants::CONFIGURATION;
         $cfg[Constants::FROM] = Configuration::get('PS_SHOP_NAME');
         return $cfg;
@@ -48,7 +48,7 @@ class Seven extends Module {
      * @return string
      * @throws PrestaShopException
      */
-    public function getContent() {
+    public function getContent(): string
         $output = '';
 
         if (Tools::isSubmit('submit' . $this->name)) {
@@ -84,7 +84,7 @@ class Seven extends Module {
      * @param string $hook
      * @param string $value
      */
-    private function toggleHookRegistration($hook, $value) {
+    private function toggleHookRegistration(string $hook, string $value): void
         $isRegistered = $this->isRegisteredInHook($hook);
         if ('1' === $value && !$isRegistered) $this->registerHook($hook);
         elseif ('0' === $value && $isRegistered) $this->unregisterHook($hook);
@@ -95,7 +95,7 @@ class Seven extends Module {
      * @throws PrestaShopDatabaseException
      * @throws \Sms77\Api\Exception\InvalidRequiredArgumentException
      */
-    public function hookActionSetInvoice(array $data) {
+    public function hookActionSetInvoice(array $data): void
         if (!Util::isEventEnabled(Constants::MSG_ON_INVOICE)) return;
 
         SmsUtil::sendEventSMS($data['Order'], Constants::ORDER_ACTION_INVOICE,
@@ -107,7 +107,7 @@ class Seven extends Module {
      * @throws PrestaShopDatabaseException
      * @throws \Sms77\Api\Exception\InvalidRequiredArgumentException
      */
-    public function hookActionPaymentConfirmation(array $data) {
+    public function hookActionPaymentConfirmation(array $data): void
         if (!Util::isEventEnabled(Constants::MSG_ON_PAYMENT)) return;
 
         SmsUtil::sendEventSMS($data['id_order'], Constants::ORDER_ACTION_PAYMENT);
@@ -119,7 +119,7 @@ class Seven extends Module {
      * @throws PrestaShopException
      * @throws \Sms77\Api\Exception\InvalidRequiredArgumentException
      */
-    public function hookActionOrderStatusPostUpdate(array $data) {
+    public function hookActionOrderStatusPostUpdate(array $data): void
         /** @var Order|Cart $order */
         $order = isset($data['Order']) ? $data['Order'] : $data['cart'];
         $order = $order ?: new Order($data['id_order']);
@@ -134,7 +134,7 @@ class Seven extends Module {
      * @return bool
      * @throws PrestaShopException
      */
-    public function install() {
+    public function install(): bool
         TableWrapper::create();
 
         $tab = new Tab;
@@ -154,7 +154,7 @@ class Seven extends Module {
     /**
      * @return bool
      */
-    public function uninstall() {
+    public function uninstall(): bool
         TableWrapper::drop();
 
         foreach (Tab::getCollectionFromModule($this->name) as $tab) $tab->delete();

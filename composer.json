@@ -19,21 +19,22 @@
     "preferred-install": "dist",
     "prepend-autoloader": false
   },
-  "description": "seven.io module for PrestaShop 1.6 & 1.7 & 8.x applications.",
+  "description": "seven.io module for PrestaShop 1.7 & 8.x applications."
   "homepage": "https://github.com/seven-io/prestashop",
   "keywords": [
     "communication",
     "marketing",
     "prestashop",
-    "sms"
+    "sms",
+    "prestashop8"
   ],
   "license": "MIT",
   "minimum-stability": "dev",
   "name": "seven.io/prestashop",
   "prefer-stable": true,
   "require": {
-    "php": ">=5.6.0",
-    "sms77/api": "dev-php5.6",
+    "php": ">=8.0.0",
+    "sms77/api": "^3.0",
     "ext-json": "*",
     "ext-pdo": "*"
   },
@@ -45,6 +46,6 @@
   },
   "type": "prestashop-module",
   "require-dev": {
-    "prestashop/autoindex": "^1.0"
+    "prestashop/autoindex": "^2.0"
   }
 }

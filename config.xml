@@ -2,7 +2,7 @@
 <module>
     <name>seven</name>
     <displayName><![CDATA[seven]]></displayName>
-    <version><![CDATA[3.0.0]]></version>
+    <version><![CDATA[3.1.0]]></version>
     <description><![CDATA[seven.io module to programmatically send text messages.]]></description>
     <author><![CDATA[seven communications GmbH & Co. KG]]></author>
     <tab><![CDATA[emailing]]></tab>

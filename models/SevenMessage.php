@@ -14,7 +14,6 @@
  */
 
 class SevenMessage extends ObjectModel
-{
     /**
      * @see ObjectModel::$definition
      */
@@ -28,6 +27,5 @@ class SevenMessage extends ObjectModel
         'primary' => 'id_seven_message',
         'table' => 'seven_message',
     ];
-    /** @var string $response */
-    public $response;
+    public string $response = '';
 }

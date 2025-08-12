@@ -12,31 +12,34 @@
 
 use Sms77\Api\Constant\SmsOptions;
 
-class SevenAdminController extends ModuleAdminController {
-    public function __construct() {
+class SevenAdminController extends ModuleAdminController
+    public function __construct()
         $this->table = 'seven_message';
         $this->className = 'SevenMessage';
 
         parent::__construct();
     }
 
-    public function postProcess() {
-        if (!Tools::isSubmit('submitAdd' . $this->table)) return;
+    public function postProcess(): bool
+        if (!Tools::isSubmit('submitAdd' . $this->table)) return parent::postProcess();
 
         if (!Util::hasApiKey()) {
             $this->errors[] = Tools::displayError('No API key given.');
-            return;
+            return parent::postProcess();
         }
 
         $res = SmsUtil::sendBulk();
 
-        if (null === $res || (is_array($res) && !count($res)))
-            $this->errors[] = Tools::displayError('An error has occurred: ' . $res);
-        else
+        if (null === $res || (is_array($res) && !count($res))) {
+            $this->errors[] = Tools::displayError('An error has occurred: ' . json_encode($res));
+        } else {
             Tools::redirectAdmin(self::$currentIndex . '&conf=4&token=' . $this->token);
+        }
+        
+        return parent::postProcess();
     }
 
-    public function renderForm() {
+    public function renderForm(): string
         $this->redirectIfMissingApiKey();
 
         $context = Context::getContext();
@@ -180,19 +183,19 @@ class SevenAdminController extends ModuleAdminController {
         ];
 
         if (!$this->loadObject(true)) {
-            return;
+            return '';
         }
 
         return parent::renderForm();
     }
 
-    private function redirectIfMissingApiKey() {
+    private function redirectIfMissingApiKey(): void
         if (!Util::hasApiKey()) {
             Tools::redirectAdmin(Util::pluginConfigLink());
         }
     }
 
-    public function renderList() {
+    public function renderList(): string
         $this->redirectIfMissingApiKey();
 
         $this->fields_list = [

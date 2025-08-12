@@ -10,8 +10,8 @@
  * @license   LICENSE
  */
 
-class Form extends HelperForm {
-    private function getOptionName($k, $v): string {
+class Form extends HelperForm
+    private function getOptionName(string $k, mixed $v): string
         $optionName = 'config[' . $k . ']';
 
         if (is_array($v)) $optionName .= '[]';
@@ -19,14 +19,14 @@ class Form extends HelperForm {
         return $optionName;
     }
 
-    private function setFieldValues(): void {
+    private function setFieldValues(): void
         $config = Configuration::getMultiple(array_keys(Constants::CONFIGURATION));
 
         foreach ($config as $k => $v)
             $this->fields_value[$this->getOptionName($k, $v)] = $v;
     }
 
-    public function __construct($name) {
+    public function __construct(string $name)
         parent::__construct();
 
         $defaultLang = (int)Configuration::get('PS_LANG_DEFAULT');
@@ -153,14 +153,14 @@ class Form extends HelperForm {
         $this->toolbar_scroll = true;
     }
 
-    private function makeBool(string $action, string $label, string $desc): array {
+    private function makeBool(string $action, string $label, string $desc): array
         return FormUtil::makeSwitch(
             'config[SEVEN_MSG_ON_' . $action . ']',
             $label, Tools::strtolower($action), true, 'settings', $desc
         );
     }
 
-    private function makeTextarea(string $action, string $trans): array {
+    private function makeTextarea(string $action, string $trans): array
         return FormUtil::makeTextarea(
             'config[SEVEN_' . $action . ']', $trans, 'settings');
     }

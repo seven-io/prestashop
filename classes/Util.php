@@ -14,7 +14,7 @@ class Util {
     /**
      * @throws ReflectionException
      */
-    public static function parseFormByClass(string $class, callable $cb): array {
+    public static function parseFormByClass(string $class, callable $cb): array
         $array = array_flip((new ReflectionClass($class))->getConstants());
 
         foreach (array_keys($array) as $key) $cb($array, $key);
@@ -22,22 +22,22 @@ class Util {
         return $array;
     }
 
-    public static function isEventEnabled(string $action): bool {
+    public static function isEventEnabled(string $action): bool
         return 1 === (int)Configuration::get($action);
     }
 
-    public static function getAddressForOrder(Order $order): array {
+    public static function getAddressForOrder(Order $order): array
         return (array)new Address((int)(Tools::strlen($order->id_address_delivery)
             ? $order->id_address_delivery
             : $order->id_address_invoice));
     }
 
-    public static function getRecipient(array $customer): mixed {
-        return '' === $customer['phone_mobile']
-            ? $customer['phone'] : $customer['phone_mobile'];
+    public static function getRecipient(array $customer): string
+        return empty($customer['phone_mobile'])
+            ? (string)$customer['phone'] : (string)$customer['phone_mobile'];
     }
 
-    public static function getOrderStateAction(OrderState $orderState): ?string {
+    public static function getOrderStateAction(OrderState $orderState): ?string
         if (4 === $orderState->id) return Constants::ORDER_ACTION_SHIPMENT; // works
         if (5 === $orderState->id) return Constants::ORDER_ACTION_DELIVERY; // works
         if (7 === $orderState->id) return Constants::ORDER_ACTION_REFUND; // works
@@ -45,11 +45,11 @@ class Util {
         return null;
     }
 
-    public static function hasApiKey(): bool {
+    public static function hasApiKey(): bool
         return (bool)Tools::strlen(Configuration::get(Constants::API_KEY));
     }
 
-    public static function log(mixed $data): void {
+    public static function log(mixed $data): void
         $data = json_encode($data);
         $logger = new FileLogger(0);
         $logger->setFilename(_PS_ROOT_DIR_ . '/var/logs/seven.log');
@@ -62,13 +62,13 @@ class Util {
     /**
      * @throws PrestaShopException
      */
-    public static function pluginConfigLink(): string {
+    public static function pluginConfigLink(): string
         return Context::getContext()->link->getAdminLink('seven', true, [
             'route' => 'admin_module_configure_action',
             'module_name' => 'seven']);
     }
 
-    public static function stringifyUniqueList(array $items): string {
+    public static function stringifyUniqueList(array $items): string
         return implode(',', array_unique($items));
     }
 }
