@@ -19,7 +19,7 @@
     "preferred-install": "dist",
     "prepend-autoloader": false
   },
-  "description": "seven.io module for PrestaShop 1.7 & 8.x applications."
+  "description": "seven.io module for PrestaShop 1.7 & 8.x applications.",
   "homepage": "https://github.com/seven-io/prestashop",
   "keywords": [
     "communication",
