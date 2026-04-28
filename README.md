@@ -1,56 +1,64 @@
-<img src="https://www.seven.io/wp-content/uploads/Logo.svg" width="250" />
+<p align="center">
+  <img src="https://www.seven.io/wp-content/uploads/Logo.svg" width="250" alt="seven logo" />
+</p>
 
+<h1 align="center">seven SMS for PrestaShop</h1>
 
-# Official module for PrestaShop 1.6 & 1.7 & 8.x
+<p align="center">
+  Official module for <a href="https://www.prestashop.com/">PrestaShop</a> 1.6, 1.7 and 8.x - send SMS to your shop customers via the seven gateway.
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-teal.svg" alt="MIT License" /></a>
+  <img src="https://img.shields.io/badge/PrestaShop-1.6%20|%201.7%20|%208.x-blue" alt="PrestaShop 1.6 | 1.7 | 8.x" />
+  <img src="https://img.shields.io/badge/PHP-7.2%2B-purple" alt="PHP 7.2+" />
+  <a href="https://packagist.org/packages/seven.io/prestashop"><img src="https://img.shields.io/packagist/v/seven.io/prestashop" alt="Packagist" /></a>
+</p>
+
+---
+
+## Features
+
+- **Single & Bulk SMS** - Send messages to one or many customers
+- **Custom Sender ID** - Up to 11 alphanumeric or 16 numeric characters
+- **Configurable from the Admin** - Manage everything from **Modules > Module Manager > seven**
+
+## Prerequisites
+
+- PrestaShop 1.6, 1.7 or 8.x
+- PHP 7.2+
+- A [seven account](https://www.seven.io/) with API key ([How to get your API key](https://help.seven.io/en/developer/where-do-i-find-my-api-key))
 
 ## Installation
 
-**Via Composer**
+### Composer (recommended)
 
-1. Open a shell and navigate to the PrestaShop installation
-2. Run `composer require seven.io/prestashop`
-3. Administration: Go to `Modules->Module Manager` and activate `seven`
+```bash
+cd /path/to/prestashop
+composer require seven.io/prestashop
+```
 
-**Via GitHub**
+Then activate the module: **Modules > Module Manager > seven > Install**.
 
-1. [Download](https://github.com/seven-io/prestashop/releases/latest)
-   the latest release as *.zip
-2. Extract archive `unzip -d /path/to/prestashop/modules <archive_name>.zip`
-3. Administration: Go to `Modules->Module Manager`, search for `seven` and click `install`
+### Manual
 
-### Usage
+1. Download the [latest release](https://github.com/seven-io/prestashop/releases/latest) ZIP.
+2. Extract it into the modules folder:
 
-Go to the module manager and search for `seven`. Click on the `settings` button and look
-through the available options. Remember to set your API key in order to be able to send
-messages.
+   ```bash
+   unzip -d /path/to/prestashop/modules <archive_name>.zip
+   ```
 
-**Available message placeholders:**
+3. **Modules > Module Manager**, search for *seven* and click **Install**.
 
-- {address.&lt;property>} => Use a property from the *Address* object
-    - {address.firstname} resolves to the customers first name
-    - {address.lastname} resolves to the customers last name
-- {invoice.&lt;property>} => Use a property from the *OrderInvoice* object (available only
-  on invoice creation)
-    - {invoice.number} resolves to the invoice number
-    - {invoice.total_paid_tax_incl} resolves to the invoices total amount tax included
-- {order.&lt;property>} => Use a property from the *Order* object (if available)
-    - {order.id} resolves to the order ID
-    - {order.reference} resolves to the order reference
+## Configuration
 
-**Addresses**: The delivery address takes precedence over the billing address. So if the
-delivery address differs to the billing address, the delivery address will be taken for
-message placeholders.
+Open **Modules > Module Manager**, click **Configure** on the *seven* module and paste your API key. Optional fields like sender ID can be set on the same screen.
 
-#### Implemented Events
+## Support
 
-- Delivery - the order status has been set to delivered
-- Invoice Creation - an order invoice has been created
-- Payment - the order has been marked as being fully paid
-- Refund - the order status has been set to refunded
-- Shipping - the order status has been set to shipped
+Need help? Feel free to [contact us](https://www.seven.io/en/company/contact/) or [open an issue](https://github.com/seven-io/prestashop/issues).
 
-###### Support
+## License
 
-Need help? Feel free to [contact us](https://www.seven.io/en/company/contact/).
-
-[![MIT](https://img.shields.io/badge/License-MIT-teal.svg)](LICENSE)
+[MIT](LICENSE)
